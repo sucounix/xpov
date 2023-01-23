@@ -37,13 +37,13 @@ COPY . .
 
 ENV PYTHONPATH=/app
 ENV WORKERS=1
+ENV ENV=development
 
 RUN adduser --shell /bin/sh appuser && \
   chown -R appuser:appuser .
 
 #USER appuser
-EXPOSE 8600
+EXPOSE 5000
 
-ENTRYPOINT [ "python", "run_app_dev.sh" ]
 # TODO: remove migration
-# CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:8000 --workers=$WORKERS --preload nucleus.wsgi:application"]
+CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:5000 --workers=$WORKERS --env ENV=$ENV --preload wsgi:app"]
