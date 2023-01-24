@@ -47,3 +47,4 @@ EXPOSE 5000
 
 # TODO: remove migration
 CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:5000 --workers=$WORKERS --env ENV=$ENV --preload wsgi:app"]
+
