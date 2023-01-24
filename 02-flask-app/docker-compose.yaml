@@ -1,0 +1,40 @@
+# version: '3'
+
+# services:
+#     reverseproxy:
+#         hostname: reverse
+#         image: nginx-plus-reverse-proxy
+#         ports:
+#             - 8080:80
+
+#         restart: always
+
+version: '2'
+
+services:
+
+  reverseproxy:
+    hostname: nginx
+    container_name: nginx
+    image: 086951686584.dkr.ecr.us-east-1.amazonaws.com/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - nginx-proxy
+
+  flask:
+    depends_on:
+        - reverseproxy
+    hostname: flask
+    image: 086951686584.dkr.ecr.us-east-1.amazonaws.com/flask
+    container_name: flask
+    restart: always
+    networks:
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    name: nginx-proxy
+    driver: bridge
