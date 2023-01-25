@@ -1,0 +1,17 @@
+version: '3'
+services:
+  reverseproxy:
+    hostname: nginx
+    container_name: nginx
+    image: 086951686584.dkr.ecr.us-east-1.amazonaws.com/nginx@sha256:4bfffb4028dab793df2891671a422dc3117c5a71be1939b5d31e6ba820a44f39
+    ports:
+      - "80:80"
+  flask:
+    depends_on:
+        - reverseproxy
+    hostname: flask
+    image: 086951686584.dkr.ecr.us-east-1.amazonaws.com/flask:latest
+    container_name: flask
+    restart: always
+    links:
+      - reverseproxy
