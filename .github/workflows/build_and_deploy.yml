@@ -51,7 +51,7 @@ jobs:
         if: endsWith(github.ref, '/dev')
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY=086951686584.dkr.ecr.eu-central-1.amazonaws.com/xpovx-dev-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=xpovx-dev-falsk-app" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpovx-service-dev" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
           echo "ECS_TASK_DEFINITION=.aws/dev-drug-interaction-task-definition.json" >> $GITHUB_ENV
