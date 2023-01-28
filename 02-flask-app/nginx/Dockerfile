@@ -13,5 +13,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 STOPSIGNAL SIGTERM
+HEALTHCHECK CMD curl --fail http://localhost:80/health || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
