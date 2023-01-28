@@ -380,3 +380,4 @@ nucleus-credentials.json
 credentials.json
 
 tmp/
+secret.tfvars
