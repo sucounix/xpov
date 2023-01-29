@@ -3,7 +3,8 @@ name: "Snipe-IT CI-CD"
 on:
   push:
     branches: [ "dev" ]
-  workflow_dispatch:
+    paths:
+      - '01-infra/**'
 
 jobs:
      ## Initialize and apply terraform configurations
