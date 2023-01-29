@@ -1,10 +1,10 @@
 # app/env to scaffold
-name = "xpov-dev"
+name        = "xpov-dev"
 environment = "dev"
-region = "us-east-1"
+region      = "us-east-1"
 aws_profile = "default"
-saml_role = "xpov-admin"
+saml_role   = "xpov-admin"
 tags = {
-  name   = "xpov-flask-app"
-  environment   = "dev"
+  name        = "xpov-flask-app"
+  environment = "dev"
 }
