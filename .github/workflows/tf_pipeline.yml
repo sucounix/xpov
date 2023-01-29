@@ -57,3 +57,11 @@ jobs:
           -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           --var-file="../envs/dev.tfvars"
         # continue-on-error: true
+
+      - name: Terraform deploy
+        if: inputs.github_event_name == 'push'
+        run: |
+          terraform apply \
+          -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          --var-file="../envs/dev.tfvars"
