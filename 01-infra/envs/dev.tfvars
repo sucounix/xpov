@@ -10,3 +10,9 @@ container_name_0    = "nginx"
 container_image_0   = "nginx"
 container_name_1    = "falsk-app"
 container_image_1   = "falsk-app"
+application-secrets = {
+  "SOLARIS_WEBHOOK_SECRET"   = "my-solaris-webhook-secret"
+  "DYNAMO_DB_KEY"            = "my-dynamo-db-key"
+  "DYNAMO_DB_SECRET"         = "my-dynamo-db-secret"
+  "API_KEY_X" = "my-api-key"
+}
