@@ -72,7 +72,7 @@ jobs:
   infracost:
     runs-on: ubuntu-latest
     name: Show infracost diff
-
+    steps:
       - name: Setup Infracost
         uses: infracost/actions/setup@v2
         # See https://github.com/infracost/actions/tree/master/setup for other inputs
