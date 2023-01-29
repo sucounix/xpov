@@ -13,7 +13,7 @@ defaults:
     shell: bash
     working-directory: 01-infra/infra
 env:
- TF_ROOT: "."
+ TF_ROOT: "01-infra/infra"
 
 jobs:
   terraform:
@@ -100,6 +100,7 @@ jobs:
       # Generate an Infracost diff and save it to a JSON file.
       - name: Generate Infracost diff
         run: |
+          pwd &&
           infracost diff --path=${TF_ROOT} \
                           --format=json \
                           --compare-to=/tmp/infracost-base.json \
