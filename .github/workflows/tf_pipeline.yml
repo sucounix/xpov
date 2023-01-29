@@ -12,7 +12,7 @@ defaults:
   run:
     shell: bash
     working-directory: 01-infra/infra
-# env:
+env:
  TF_ROOT: "."
 
 jobs:
