@@ -8,4 +8,3 @@ tags = {
   name   = "xpov-flask-app"
   environment   = "dev"
 }
-
