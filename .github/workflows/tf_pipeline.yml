@@ -11,9 +11,9 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: "."
+    working-directory: 01-infra/infra
 # env:
-#  TF_ROOT: 01-infra/infra
+ TF_ROOT: "."
 
 jobs:
   terraform:
