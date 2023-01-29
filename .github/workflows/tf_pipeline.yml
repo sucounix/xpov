@@ -18,6 +18,16 @@ jobs:
     name: "Terraform"
     runs-on: ubuntu-latest
     steps:
+      - name: aws
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: staging
+          region: us-east-1
+          key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          secret: ${{ secrets.AWS_ACCESS_KEY_ID }}
+
+
+
       - name: Checkout
         uses: actions/checkout@v2
 

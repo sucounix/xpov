@@ -21,8 +21,7 @@ terraform {
 # https://www.terraform.io/docs/providers/
 provider "aws" {
   region  = var.region
-  access_key = var.aws-access-key
-  secret_key = var.aws-secret-key
+  profile = var.aws_profile
 }
 
 /*
