@@ -8,6 +8,11 @@ on:
     paths:
       - '01-infra/**'
 
+defaults:
+  run:
+    shell: bash
+    working-directory: 01-infra/dev
+
 jobs:
   terraform:
     name: "Terraform"
@@ -27,10 +32,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          cd 01-infra/dev
-          terraform init
-            terraform init -backend-config=../backend/${{ env.environment }}.conf \
-              --var-file="../envs/${{ env.environment }}.tfvars; terraform validate"
+            terraform init
 
       - name: Terraform Validate
         id: validate
