@@ -61,13 +61,13 @@ jobs:
           --var-file="../envs/dev.tfvars"
         # continue-on-error: true
 
-      - name: Terraform deploy
-        # if: inputs.github_event_name == 'push'
-        run: |
-          terraform apply \
-          -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-          -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          --var-file="../envs/dev.tfvars"
+      # - name: Terraform deploy
+      #   # if: inputs.github_event_name == 'push'
+      #   run: |
+      #     terraform apply \
+      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+      #     --var-file="../envs/dev.tfvars"
 
 
       - name: Setup Infracost
@@ -78,15 +78,15 @@ jobs:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
 
       # Checkout the base branch of the pull request (e.g. main/master).
-      - name: Checkout base branch
-        uses: actions/checkout@v3
-        with:
-          ref: '${{ github.event.pull_request.base.ref }}'
+      # - name: Checkout base branch
+      #   uses: actions/checkout@v3
+      #   with:
+      #     ref: '${{ github.event.pull_request.base.ref }}'
 
       # Generate Infracost JSON file as the baseline.
       - name: Generate Infracost cost estimate baseline
         run: |
-          infracost breakdown --path=${TF_ROOT} \
+          infracost breakdown  \
                               --format=json \
                               --out-file=/tmp/infracost-base.json
 
