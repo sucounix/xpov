@@ -23,8 +23,8 @@ jobs:
         with:
           profile: default
           region: us-east-1
-          key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          secret: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 
 
