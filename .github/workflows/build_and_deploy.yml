@@ -11,8 +11,8 @@ on:
       - dev
       # - stage
       # - main
-    # paths-ignore:
-    #   - lambda_function.py
+    paths:
+      - '02-flask-app/**'
 
 jobs:
   build:
