@@ -55,15 +55,15 @@ module "alb" {
   environment         = var.environment
   alb_security_groups = [module.security_groups.alb]
   # alb_tls_cert_arn    = var.tsl_certificate_arn
-  health_check_path   = var.health_check_path
+  health_check_path = var.health_check_path
 }
 
 module "ecr" {
-  source      = "./ecr"
-  name        = var.name
-  environment = var.environment
-  container_name_0 =var.container_name_0
-  container_name_1 =var.container_name_1
+  source           = "./ecr"
+  name             = var.name
+  environment      = var.environment
+  container_name_0 = var.container_name_0
+  container_name_1 = var.container_name_1
 }
 
 
@@ -91,7 +91,7 @@ module "ecs" {
   container_cpu_1             = var.container_cpu_1
   container_memory_1          = var.container_memory_1
 
-  service_desired_count       = var.service_desired_count
+  service_desired_count = var.service_desired_count
   container_environment = [
     { name = "LOG_LEVEL",
     value = "DEBUG" },
@@ -99,7 +99,7 @@ module "ecs" {
     value = var.container_port_0 }
   ]
   container_secrets      = module.secrets.secrets_map
-  container_image_0 = module.ecr.aws_ecr_repository_url
-  container_image_1 = module.ecr.aws_ecr_repository_url_container_name_1
+  container_image_0      = module.ecr.aws_ecr_repository_url
+  container_image_1      = module.ecr.aws_ecr_repository_url_container_name_1
   container_secrets_arns = module.secrets.application_secrets_arn
 }

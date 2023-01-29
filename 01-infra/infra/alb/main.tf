@@ -42,20 +42,20 @@ resource "aws_alb_listener" "http" {
   port              = 80
   protocol          = "HTTP"
 
-    default_action {
-        target_group_arn = aws_alb_target_group.main.id
-        type             = "forward"
-    }
+  default_action {
+    target_group_arn = aws_alb_target_group.main.id
+    type             = "forward"
+  }
 
-#   default_action {
-#     type = "redirect"
+  #   default_action {
+  #     type = "redirect"
 
-#     # redirect {
-#     #   port        = 443
-#     #   protocol    = "HTTPS"
-#     #   status_code = "HTTP_301"
-#     # }
-#   }
+  #     # redirect {
+  #     #   port        = 443
+  #     #   protocol    = "HTTPS"
+  #     #   status_code = "HTTP_301"
+  #     # }
+  #   }
 }
 
 # Redirect traffic to target group

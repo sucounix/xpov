@@ -25,17 +25,17 @@ resource "aws_nat_gateway" "main" {
   depends_on    = [aws_internet_gateway.main]
 
   tags = {
-    Name        = "${var.name}-nat-${var.environment}-${format("%03d", count.index+1)}"
+    Name        = "${var.name}-nat-${var.environment}-${format("%03d", count.index + 1)}"
     Environment = var.environment
   }
 }
 
 resource "aws_eip" "nat" {
   count = length(var.private_subnets)
-  vpc = true
+  vpc   = true
 
   tags = {
-    Name        = "${var.name}-eip-${var.environment}-${format("%03d", count.index+1)}"
+    Name        = "${var.name}-eip-${var.environment}-${format("%03d", count.index + 1)}"
     Environment = var.environment
   }
 }
@@ -47,7 +47,7 @@ resource "aws_subnet" "private" {
   count             = length(var.private_subnets)
 
   tags = {
-    Name        = "${var.name}-private-subnet-${var.environment}-${format("%03d", count.index+1)}"
+    Name        = "${var.name}-private-subnet-${var.environment}-${format("%03d", count.index + 1)}"
     Environment = var.environment
   }
 }
@@ -60,7 +60,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.name}-public-subnet-${var.environment}-${format("%03d", count.index+1)}"
+    Name        = "${var.name}-public-subnet-${var.environment}-${format("%03d", count.index + 1)}"
     Environment = var.environment
   }
 }
@@ -85,7 +85,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name        = "${var.name}-routing-table-private-${format("%03d", count.index+1)}"
+    Name        = "${var.name}-routing-table-private-${format("%03d", count.index + 1)}"
     Environment = var.environment
   }
 }

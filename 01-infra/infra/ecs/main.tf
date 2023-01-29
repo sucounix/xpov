@@ -124,63 +124,63 @@ resource "aws_ecs_task_definition" "main" {
   task_role_arn            = aws_iam_role.ecs_task_role.arn
   container_definitions = jsonencode([
     {
-    name        = "${var.name}-container-${var.environment}-${var.container_name_0}"
-    image       = "${var.container_image_0}"
-    essential   = true
-    environment = var.container_environment
-    portMappings = [{
-      protocol      = "tcp"
-      containerPort = var.container_port_0
-      hostPort      = var.container_port_0
-    }]
+      name        = "${var.name}-container-${var.environment}-${var.container_name_0}"
+      image       = "${var.container_image_0}"
+      essential   = true
+      environment = var.container_environment
+      portMappings = [{
+        protocol      = "tcp"
+        containerPort = var.container_port_0
+        hostPort      = var.container_port_0
+      }]
 
-    logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = aws_cloudwatch_log_group.main.name
-        awslogs-stream-prefix = "ecs"
-        awslogs-region        = var.region
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.main.name
+          awslogs-stream-prefix = "ecs"
+          awslogs-region        = var.region
+        }
       }
-    }
-    healthcheck = {
-      command     = [ "CMD-SHELL", "curl -f http://localhost:80/health || exit 1 || exit 1" ]
-      retries     = 3
-      timeout     = 5
-      interval    = 30
-      startPeriod = 20
-    }
-    secrets = var.container_secrets
+      healthcheck = {
+        command     = ["CMD-SHELL", "curl -f http://localhost:80/health || exit 1 || exit 1"]
+        retries     = 3
+        timeout     = 5
+        interval    = 30
+        startPeriod = 20
+      }
+      secrets = var.container_secrets
     },
     {
 
-    name        = "${var.name}-container-${var.environment}-${var.container_name_1}"
-    image       = "${var.container_image_1}"
-    essential   = true
-    # environment = var.container_environment
-    portMappings = [{
-      protocol      = "tcp"
-      containerPort = var.container_port_1
-      hostPort      = var.container_port_1
-    }]
+      name      = "${var.name}-container-${var.environment}-${var.container_name_1}"
+      image     = "${var.container_image_1}"
+      essential = true
+      # environment = var.container_environment
+      portMappings = [{
+        protocol      = "tcp"
+        containerPort = var.container_port_1
+        hostPort      = var.container_port_1
+      }]
 
-    logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = aws_cloudwatch_log_group.main.name
-        awslogs-stream-prefix = "ecs"
-        awslogs-region        = var.region
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.main.name
+          awslogs-stream-prefix = "ecs"
+          awslogs-region        = var.region
+        }
       }
-    }
 
-    healthcheck = {
-      command     = [ "CMD-SHELL", "curl -f http://localhost:5000/api/docs || exit 1" ]
-      retries     = 3
-      timeout     = 5
-      interval    = 30
-      startPeriod = 20
-    }
+      healthcheck = {
+        command     = ["CMD-SHELL", "curl -f http://localhost:5000/api/docs || exit 1"]
+        retries     = 3
+        timeout     = 5
+        interval    = 30
+        startPeriod = 20
+      }
 
-    secrets = var.container_secrets
+      secrets = var.container_secrets
   }])
 
   tags = {
@@ -210,7 +210,7 @@ resource "aws_ecs_service" "main" {
   launch_type                        = "FARGATE"
   scheduling_strategy                = "REPLICA"
   force_new_deployment               = true
-  
+
 
 
   network_configuration {
