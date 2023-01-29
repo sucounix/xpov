@@ -5,15 +5,15 @@ provider "aws" {
   version    = "~> 2.0"
 }
 
-terraform {
-  backend "s3" {
-    bucket  = "tf-state-xpov-dev"
-    encrypt = true
-    key     = "terraform.tfstate"
-    region  = "us-east-1"
-    # dynamodb_table = "terraform-state-lock-dynamo" - uncomment this line once the terraform-state-lock-dynamo has been terraformed
-  }
-}
+# terraform {
+#   backend "s3" {
+#     # bucket  = "tf-state-xpov-dev"
+#     # encrypt = true
+#     # key     = "terraform.tfstate"
+#     # region  = "us-east-1"
+#     # dynamodb_table = "terraform-state-lock-dynamo" - uncomment this line once the terraform-state-lock-dynamo has been terraformed
+#   }
+# }
 
 resource "aws_dynamodb_table" "dynamodb-terraform-state-lock" {
   name           = "terraform-state-lock-dynamo"
@@ -64,8 +64,6 @@ module "ecr" {
   environment = var.environment
   container_name_0 =var.container_name_0
   container_name_1 =var.container_name_1
-  # container_image_0 = var.container_image_0
-  # container_image_1 = var.container_image_1
 }
 
 
