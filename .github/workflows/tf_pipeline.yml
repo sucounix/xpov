@@ -23,7 +23,6 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
-        with:
 
       - name: Terraform Format
         id: fmt
