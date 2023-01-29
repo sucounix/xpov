@@ -1,0 +1,35 @@
+---
+name: "Snipe-IT CI-CD"
+on:
+  push:
+    branches: [ "dev" ]
+  workflow_dispatch:
+
+jobs:
+     ## Initialize and apply terraform configurations
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+
+      - name: Initialize Terraform
+        run: |
+          cd terraform
+          terraform init
+
+      - name: Validate Terraform Configurations
+        id: validate
+        run: |
+          cd terraform
+          terraform validate -no-color
+
+      - name: Run Terraform Plan
+        id: plan
+        run: |
+          cd terraform
+          terraform plan -no-color -input=false
+        continue-on-error: true
+
+      - name: Apply Terraform Configurations
+        run: |
+          cd terraform
+          terraform apply -auto-approve -input=false
