@@ -31,7 +31,9 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-            terraform init -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -backend-config ../backend/dev.conf -=var-file=../db.tfvars
+            terraform init -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            -backend-config ../backend/dev.conf -var-file=../db.tfvars
 
       - name: Terraform Validate
         id: validate
