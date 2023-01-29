@@ -54,6 +54,5 @@ jobs:
         run: terraform plan -no-color \
           -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          -var-file=../db.tfvars \
-          -backend-config ../backend/dev.conf
+          -var-file=../db.tfvars
         continue-on-error: true
