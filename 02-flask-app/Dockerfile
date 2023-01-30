@@ -46,6 +46,6 @@ RUN adduser --shell /bin/sh appuser && \
 EXPOSE 8600
 
 # TODO: remove migration
-HEALTHCHECK CMD curl --fail http://localhost:5000/api/docs || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:8600/api/docs || exit 1
 
 CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:8600 --workers=$WORKERS --env ENV=$ENV --preload wsgi:app"]
