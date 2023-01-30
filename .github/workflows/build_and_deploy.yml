@@ -54,31 +54,15 @@ jobs:
 
       - name: Run DEV test scripts
         run: |
-          run_app_dev.sh &&
+          ./run_app_dev.sh &&
           poetry run pytest
 
       - name: Run Prod test scripts
         run: |
-          run_app_prod.sh &&
+          ./run_app_prod.sh &&
           poetry run pytest --host http://localhost:8600
 
 
-      # - uses: actions/checkout@v2
-      # - name: Set up Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #           python-version: 3.8
-      # - name: Install dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install flake8 pytest
-      #     pip install -r requirements.txt
-
-      # - name: Lint with flake8
-      #   run: flake8 .
-
-      # - name: Dev ENV Test with pytest
-      #   run: pytest tests.py
 
   # build:
   #   name: Build Image
