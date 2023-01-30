@@ -1,3 +1,3 @@
 #!/bin/bash
-FLASK_ENV=development flask run
+FLASK_ENV=development poetry run flask run
 

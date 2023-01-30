@@ -1,3 +1,3 @@
 #!/bin/bash
-uwsgi --ini app.ini --need-app
+poetry run uwsgi --ini app.ini --need-app
 
