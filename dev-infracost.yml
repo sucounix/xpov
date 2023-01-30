@@ -1,8 +1,8 @@
 version: 0.1
 
 projects:
-  - path: dev
-    usage_file: 01-infra/infracost-usage.yml
+  - path: 01-infra/infra
+    # usage_file: 01-infra/infracost-usage.yml
     env:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
