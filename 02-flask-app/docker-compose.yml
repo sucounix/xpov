@@ -1,3 +1,4 @@
+# ECR
 version: '3'
 services:
   reverseproxy:
@@ -15,3 +16,25 @@ services:
     restart: always
     links:
       - reverseproxy
+
+# # Local Docker
+
+# version: '3.1'
+# services:
+#   reverseproxy:
+#     hostname: nginx
+#     container_name: nginx
+#     image: xpovx-dev-nginx:dev
+#     # pull_policy: if_not_present
+#     ports:
+#       - "80:80"
+#   flask:
+#     depends_on:
+#         - reverseproxy
+#     hostname: flask
+#     image: xpovx-dev-falsk-app:dev
+#     # pull_policy: if_not_present
+#     container_name: flask
+#     restart: always
+#     links:
+#       - reverseproxy

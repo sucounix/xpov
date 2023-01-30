@@ -43,9 +43,9 @@ RUN adduser --shell /bin/sh appuser && \
   chown -R appuser:appuser .
 
 #USER appuser
-EXPOSE 5000
+EXPOSE 8600
 
 # TODO: remove migration
 HEALTHCHECK CMD curl --fail http://localhost:5000/api/docs || exit 1
 
-CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:5000 --workers=$WORKERS --env ENV=$ENV --preload wsgi:app"]
+CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:8600 --workers=$WORKERS --env ENV=$ENV --preload wsgi:app"]
