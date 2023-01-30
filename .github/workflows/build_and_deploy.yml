@@ -16,7 +16,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: 02-flask-app/
+    # working-directory: 02-flask-app/
 
 jobs:
 
@@ -40,6 +40,7 @@ jobs:
 
       - name: Install dependencies and packages
         run: |
+          pwd && ls
           python3 -m venv env && source env/bin/activate
           poetry env use 3.10
 
