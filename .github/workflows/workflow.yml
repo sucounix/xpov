@@ -12,10 +12,8 @@ defaults:
     working-directory: 02-flask-app/
 
 jobs:
-
   code-quality:
     runs-on: ubuntu-latest
-
     env:
       ENV: "dev"
 
@@ -42,7 +40,7 @@ jobs:
 
     - name: Lint with flake8
       run: poetry run flake8 /src
-     continue-on-error: false
+      continue-on-error: false
 
     - name: Run isort
       run: |
