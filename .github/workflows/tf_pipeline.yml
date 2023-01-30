@@ -61,13 +61,13 @@ jobs:
           --var-file="../envs/dev.tfvars"
         # continue-on-error: true
 
-      # - name: Terraform deploy
-      #   # if: inputs.github_event_name == 'push'
-      #   run: |
-      #     terraform apply \
-      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-      #     --var-file="../envs/dev.tfvars"
+      - name: Terraform deploy
+        # if: inputs.github_event_name == 'push'
+        run: |
+          terraform apply \
+          -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          --var-file="../envs/dev.tfvars"
 
   infracost:
     runs-on: ubuntu-latest
@@ -118,10 +118,10 @@ jobs:
       #   hide-and-new - Minimize previous comments and create a new one.
       #   new - Create a new cost estimate comment on every push.
       # See https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests for other options.
-      - name: Post Infracost comment
-        run: |
-            infracost comment github --path=/tmp/infracost.json \
-                                     --repo=$GITHUB_REPOSITORY \
-                                     --github-token=${{github.token}} \
-                                     --pull-request=${{github.event.pull_request.number}} \
-                                     --behavior=update
+      # - name: Post Infracost comment
+      #   run: |
+      #       infracost comment github --path=/tmp/infracost.json \
+      #                                --repo=$GITHUB_REPOSITORY \
+      #                                --github-token=${{github.token}} \
+      #                                --pull-request=${{github.event.pull_request.number}} \
+      #                                --behavior=update
