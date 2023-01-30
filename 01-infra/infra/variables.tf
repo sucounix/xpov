@@ -81,7 +81,7 @@ variable "container_name_1" {
 
 variable "container_port_1" {
   description = "Port of container"
-  default     = 5000
+  default     = 8600
 }
 
 variable "container_cpu_1" {

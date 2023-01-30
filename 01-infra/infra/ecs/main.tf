@@ -173,7 +173,7 @@ resource "aws_ecs_task_definition" "main" {
       }
 
       healthcheck = {
-        command     = ["CMD-SHELL", "curl -f http://localhost:5000/api/docs || exit 1"]
+        command     = ["CMD-SHELL", "curl -f http://localhost:8600/api/docs || exit 1"]
         retries     = 3
         timeout     = 5
         interval    = 30
