@@ -54,12 +54,12 @@ jobs:
 
       - name: Run DEV test scripts
         run: |
-          ./run_app_dev.sh &&
+          ./run_app_dev.sh &
           poetry run pytest
 
       - name: Run Prod test scripts
         run: |
-          ./run_app_prod.sh &&
+          ./run_app_prod.sh &
           poetry run pytest --host http://localhost:8600
 
 
@@ -147,7 +147,7 @@ jobs:
   #         # Build a docker container and
   #         # push it to ECR so that it can
   #         # be deployed to ECS.
-  #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 02-flask-app/.
+  #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
   #         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
   #     # - name: Run Trivy vulnerability scanner
