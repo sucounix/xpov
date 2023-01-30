@@ -8,13 +8,13 @@ name: Flask-app workflow
 on:
   workflow_run:
     workflows: ["Test"]
-  push:
-    branches:
-      - dev
-      # - stage
-      # - main
-    paths:
-      - '02-flask-app/**'
+    push:
+      branches:
+        - dev
+        # - stage
+        # - main
+      paths:
+        - '02-flask-app/**'
 
 defaults:
   run:
