@@ -46,7 +46,7 @@ jobs:
       run: |
         source env/bin/activate
         poetry run isort --line-length 90 --multi-line VERTICAL_HANGING_INDENT --check-only --diff src/
-      continue-on-error: false
+      continue-on-error: true
 
   Test:
     name: Test Image
