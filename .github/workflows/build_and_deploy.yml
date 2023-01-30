@@ -51,7 +51,9 @@ jobs:
 
 
       - name: Run test scripts
-        run: poetry run pytest
+        run: |
+          ./run_app_dev.sh &&
+          poetry run pytest
 
 
       # - uses: actions/checkout@v2
