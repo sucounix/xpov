@@ -6,6 +6,8 @@
 name: Flask-app workflow
 
 on:
+workflow_run:
+  workflows: ["Run Tests"]
   push:
     branches:
       - dev
@@ -13,6 +15,7 @@ on:
       # - main
     paths:
       - '02-flask-app/**'
+
 defaults:
   run:
     shell: bash
@@ -62,11 +65,9 @@ jobs:
           ./run_app_prod.sh &
           poetry run pytest --host http://localhost:8600
 
-
-
   build:
     name: Build Image
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.build-image.outputs.image }}
 
