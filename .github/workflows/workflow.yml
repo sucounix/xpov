@@ -39,13 +39,13 @@ jobs:
       run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
 
     - name: Lint with flake8
-      run: poetry run flake8 /src
+      run: poetry run flake8 src/
       continue-on-error: false
 
     - name: Run isort
       run: |
         source env/bin/activate
-        poetry run isort --line-length 90 --multi-line VERTICAL_HANGING_INDENT --check-only --diff /src
+        poetry run isort --line-length 90 --multi-line VERTICAL_HANGING_INDENT --check-only --diff src/
       continue-on-error: false
 
   Test:
