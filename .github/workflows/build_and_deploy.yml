@@ -6,8 +6,8 @@
 name: Flask-app workflow
 
 on:
-workflow_run:
-  workflows: ["Test"]
+  workflow_run:
+    workflows: ["Test"]
   push:
     branches:
       - dev
