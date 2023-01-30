@@ -2,9 +2,6 @@
 	"folders": [
 		{
 			"path": "../xpov"
-		},
-		{
-			"path": "../terraform-ecs-fargate"
 		}
 	],
 	"settings": {}

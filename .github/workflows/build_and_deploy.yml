@@ -5,14 +5,14 @@
 
 name: Flask-app workflow
 
-on:
-  push:
-    branches:
-      - dev
-      # - stage
-      # - main
-    paths:
-      - '02-flask-app/**'
+# on:
+#   push:
+#     branches:
+#       - dev
+#       # - stage
+#       # - main
+#     paths:
+#       - '02-flask-app/**'
 defaults:
   run:
     shell: bash
