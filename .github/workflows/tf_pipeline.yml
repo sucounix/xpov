@@ -1,4 +1,4 @@
-name: "Terraform_CI-CD"
+name: "TerraformCI-CD"
 on:
   push:
     branches:
