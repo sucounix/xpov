@@ -59,10 +59,11 @@ jobs:
       # - name: Set environment for ${{ env.environment }} -ver
       #   run: |
       #     echo "DOCKER_IMAGE_TAG=${{ env.environment }}" >> $GITHUB_ENV
-      - name: Know the Ver
-        run: echo ${steps.version.outputs.version}}
+
 
   build:
+
+
     name: Build Image
     # needs: Test
     runs-on: ubuntu-latest
@@ -72,6 +73,9 @@ jobs:
 
 
     steps:
+
+      - name: Know the Ver
+        run: echo ${{needs.prepare.outputs.version}}
       # - name: Maximize build space
       #   uses: easimon/maximize-build-space@master
       #   with:
