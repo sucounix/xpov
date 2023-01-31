@@ -16,6 +16,8 @@ on:
         type: string
 
     secrets:
+      # GIT_ACTION_PAT:
+      #   required: true
       AWS_ACCESS_KEY_ID:
         required: true
       AWS_SECRET_ACCESS_KEY:
@@ -31,6 +33,17 @@ defaults:
     working-directory: 02-flask-app/
 
 jobs:
+
+
+  prepare:
+    runs-on: [ubuntu-latest, '${{ inputs.environment }}' ]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      secret_list: "${{ steps.vars.outputs.secret_list }}"
+      region: ${{ steps.vars.outputs.region }}
+      docker_image: ${{ steps.vars.outputs.image }}
+      docker_tag: ${{ steps.vars.outputs.image_tag }}
+      docker_registry: ${{ steps.vars.outputs.docker_registry }}
 
   build:
     name: Build Image
@@ -107,17 +120,18 @@ jobs:
       # - name: Build, tag, and push image to Amazon ECR
       - name: Build if pr is done on ${{ inputs.environment }} without ${{ inputs.environment }} tag
         if: ${{ inputs.github_event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
-
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          id: build-image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            IMAGE_TAG: |
+              ${{ github.sha }}
+              ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+          run: |
+            # Build a docker container and
+            # push it to ECR so that it can
+            # be deployed to ECS.
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master
@@ -130,15 +144,56 @@ jobs:
       #     severity: 'CRITICAL'
       #     timeout: 20m0s
 
-      # - name: Push image to Amazon ECR
-    - name: Build only on Push event
-      if: inputs.github_event_name == 'push'
+      - name: Build only on Push event
+        if: inputs.github_event_name == 'push'
+          id: build-image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            IMAGE_TAG: |
+              ${{ github.sha }}
+              ${{ needs.prepare.outputs.docker_image }}:${{env.DOCKER_IMAGE_TAG}}
+              ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+          run: |
+            # Build a docker container and
+            # push it to ECR so that it can
+            # be deployed to ECS.
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+
+      - name: Push image to Amazon ECR
         id: push-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  # release:
+  #   runs-on: [ubuntu-latest, '${{ inputs.environment }}' ]
+  #   needs: build
+  #   if: inputs.github_event_name == 'push' && inputs.environment == 'prod'
+  #   steps:
+
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: ${{ github.head_ref }}
+  #         fetch-depth: 0
+  #     - name: Bump version and push tag
+  #       id: tag_version
+  #       uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
+  #       with:
+  #         github_token: ${{ secrets.GIT_ACTION_PAT }}
+  #         release_branches: main
+  #         custom_tag: ${{ needs.prepare.outputs.version }}
+  #     - name: Create a GitHub release
+  #       uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+  #       with:
+  #         tag: ${{ steps.tag_version.outputs.new_tag }}
+  #         name: Release ${{ steps.tag_version.outputs.new_tag }}
+  #         body: ${{ steps.tag_version.outputs.changelog }}
+
 
       # - name: Microsoft Teams Notification
       #   uses: skitionek/notify-microsoft-teams@master
