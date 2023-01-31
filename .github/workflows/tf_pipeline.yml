@@ -125,6 +125,10 @@ jobs:
         with:
           ref: '${{ github.event.pull_request.base.ref }}'
 
+      - name: Set environment for ${{ needs.prepare.outputs.branch_name }}
+        run: |
+          echo "environment=${{ needs.prepare.outputs.branch_name }}" >> $GITHUB_ENV
+
       # Generate Infracost JSON file as the baseline.
       - name: Generate Infracost cost estimate baseline
         run: |
