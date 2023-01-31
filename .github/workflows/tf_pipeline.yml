@@ -54,6 +54,9 @@ jobs:
           key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: Set environment for ${{ env.environment }}
+        run: |
+          echo "environment=${{ needs.prepare.outputs.branch_name }}"
 
 
       - name: Checkout
@@ -71,8 +74,6 @@ jobs:
 
       - name: Terraform Init
         id: init
-        with:
-          environment: ${{ needs.prepare.outputs.branch_name }}
         run: |
             terraform init \
             -backend-config=../backend/${{env.environment}}.conf
