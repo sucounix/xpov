@@ -12,8 +12,7 @@ on:
       # - stg
       # - main
     paths:
-      - '**'
-      - '!0-infra/**'
+      - '02-flask-app/**'
 defaults:
   run:
     shell: bash
