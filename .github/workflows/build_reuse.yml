@@ -40,12 +40,13 @@ jobs:
       version: ${{ steps.version.outputs.version }}
       # secret_list: "${{ steps.vars.outputs.secret_list }}"
       # region: ${{ steps.vars.outputs.region }}
-      docker_image: ${{ steps.vars.outputs.image }}
+      # docker_image: ${{ steps.vars.outputs.image }}
       docker_tag: ${{ steps.vars.outputs.image_tag }}
       # docker_registry: ${{ steps.vars.outputs.docker_registry }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Git Version
         id: version
         uses: codacy/git-version@2.5.3
@@ -59,7 +60,7 @@ jobs:
     # needs: Test
     runs-on: ubuntu-latest
     outputs:
-      images: ${{ steps.build-image.outputs.image }}
+      # images: ${{ steps.build-image.outputs.image }}
       version: ${{ needs.prepare.outputs.version }}
 
 
@@ -136,7 +137,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
             ${{ github.sha }}
-            ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+            ${{ needs.prepare.outputs.version }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
@@ -158,7 +159,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
             ${{ github.sha }}
-            ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+            ${{ needs.prepare.outputs.version }}
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
@@ -169,8 +170,8 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
             ${{ github.sha }}
-            ${{ needs.prepare.outputs.docker_image }}:${{env.DOCKER_IMAGE_TAG}}
-            ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+            ${{env.DOCKER_IMAGE_TAG}}
+            ${{ needs.prepare.outputs.version }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
@@ -185,8 +186,8 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
             ${{ github.sha }}
-            ${{ needs.prepare.outputs.docker_image }}:${{env.DOCKER_IMAGE_TAG}}
-            ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+            ${{env.DOCKER_IMAGE_TAG}}
+            ${{ needs.prepare.outputs.version }}
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
