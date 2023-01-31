@@ -125,9 +125,9 @@ jobs:
         with:
           ref: '${{ github.event.pull_request.base.ref }}'
 
-      - name: Set environment for ${{ needs.prepare.outputs.branch_name }}
+      - name: Set environment for ${{ env.environment }}
         run: |
-          echo "environment=${{ needs.prepare.outputs.branch_name }}" >> $GITHUB_ENV
+          echo "environment=${{ env.environment }} >> $GITHUB_ENV
 
       # Generate Infracost JSON file as the baseline.
       - name: Generate Infracost cost estimate baseline
@@ -138,7 +138,7 @@ jobs:
                               --terraform-var=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
                               --terraform-var-file="../envs/$environment.tfvars" \
                               --out-file=/tmp/infracost-base.json
-
+environment
       # # Checkout the current PR branch so we can create a diff.
       # - name: Checkout PR branch
       #   uses: actions/checkout@v3
