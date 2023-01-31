@@ -19,7 +19,7 @@ EOF
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name = "${var.name}-ecsTaskRole"
+  name = "${var.name}-${var.environment}-ecsTaskRole"
 
   assume_role_policy = <<EOF
 {
@@ -39,7 +39,7 @@ EOF
 }
 
 resource "aws_iam_policy" "dynamodb" {
-  name        = "${var.name}-task-policy-dynamodb"
+  name        = "${var.name}-${var.environment}-task-policy-dynamodb"
   description = "Policy that allows access to DynamoDB"
 
   policy = <<EOF
@@ -69,7 +69,7 @@ EOF
 }
 
 resource "aws_iam_policy" "secrets" {
-  name        = "${var.name}-task-policy-secrets"
+  name        = "${var.name}-${var.environment}-task-policy-secrets"
   description = "Policy that allows access to the secrets we created"
 
   policy = <<EOF

@@ -117,11 +117,11 @@ resource "aws_flow_log" "main" {
 }
 
 resource "aws_cloudwatch_log_group" "main" {
-  name = "${var.name}-cloudwatch-log-group"
+  name = "${var.name}-${var.environment}-cloudwatch-log-group"
 }
 
 resource "aws_iam_role" "vpc-flow-logs-role" {
-  name = "${var.name}-vpc-flow-logs-role"
+  name = "${var.name}-${var.environment}-vpc-flow-logs-role"
 
   assume_role_policy = <<EOF
 {
