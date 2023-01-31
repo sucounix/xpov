@@ -35,7 +35,7 @@ jobs:
           else
             echo ::set-output name=branch_name::${GITHUB_REF#refs/*/}
             echo ${GITHUB_REF#refs/*/}
-            echo ${GITHUB_REF#refs/*/} >> $GITHUB_ENV
+            echo ENV=${GITHUB_REF#refs/*/} >> $GITHUB_ENV
           fi
           echo "sha_short::${GITHUB_SHA::7}"
           echo "::set-output name=sha_short::${GITHUB_SHA::7}"
