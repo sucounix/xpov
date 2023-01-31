@@ -16,5 +16,3 @@ application-secrets = {
   "DYNAMO_DB_SECRET"       = "my-dynamo-db-secret"
   "API_KEY_X"              = "my-api-key"
 }
-
-
