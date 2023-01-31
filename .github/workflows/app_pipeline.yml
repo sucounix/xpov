@@ -219,14 +219,10 @@ jobs:
     needs: build
     steps:
 
-
       - name: Checkout
         uses: actions/checkout@v3
 
-
       - run: echo ${{needs.build.outputs.images}}
-
-
 
       - name: Set up Dev environment
         if: endsWith(github.ref, '/dev')
@@ -281,7 +277,6 @@ jobs:
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ needs.build.outputs.images }}
 
-
       - name: Deploy Amazon ECS task definition
         id: deploy-image
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -290,8 +285,6 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
-
-
 
       # - name: Microsoft Teams Notification
       #   uses: skitionek/notify-microsoft-teams@master
