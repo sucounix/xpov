@@ -42,6 +42,7 @@ jobs:
 
   terraform:
     name: "Terraform"
+    needs: prepare
     runs-on: ubuntu-latest
     steps:
       - name: aws
