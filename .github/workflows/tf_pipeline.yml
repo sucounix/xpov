@@ -71,6 +71,8 @@ jobs:
 
       - name: Terraform Init
         id: init
+        with:
+          environment: ${{ needs.prepare.outputs.branch_name }}
         run: |
             terraform init \
             -backend-config=../backend/${{env.environment}}.conf
@@ -81,6 +83,8 @@ jobs:
 
       - name: Terraform Plan
         id: plan
+        with:
+          environment: ${{ needs.prepare.outputs.branch_name }}
         # if: github.event_name == 'pull_request'
         run: |
           terraform plan \
