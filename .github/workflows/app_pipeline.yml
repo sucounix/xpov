@@ -12,6 +12,7 @@ on:
       # - stg
       # - main
     paths:
+      - '**'
       - '!0-infra/**'
 defaults:
   run:
