@@ -112,4 +112,3 @@ variable "container_image_1" {
   description = "the name of your stack, e.g. \"demo\""
 }
 
-
