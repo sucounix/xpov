@@ -14,4 +14,3 @@ marshmallow
 flask_swagger_ui
 openapi_spec_validator
 
-
