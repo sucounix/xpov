@@ -55,6 +55,12 @@ jobs:
           dev-branch: dev
           minor-identifier: feat(
 
+      - name: Know the Image Tag
+        run: echo ${{needs.prepare.outputs.version}}
+      # - name: Set environment for ${{ env.environment }} -ver
+      #   run: |
+      #     echo "DOCKER_IMAGE_TAG=${{ env.environment }}" >> $GITHUB_ENV
+
   build:
     name: Build Image
     # needs: Test
@@ -170,7 +176,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
             ${{ github.sha }}
-            ${{env.DOCKER_IMAGE_TAG}}
+            ${{ env.DOCKER_IMAGE_TAG }}
             ${{ needs.prepare.outputs.version }}
         run: |
           # Build a docker container and
