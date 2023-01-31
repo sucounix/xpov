@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - dev
-      # - stg
+      - stg
       # - main
     paths:
       - '01-infra/**'
