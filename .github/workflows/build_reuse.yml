@@ -146,6 +146,36 @@ jobs:
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+
+
+      - name: Build only on Push event
+        if: inputs.github_event_name == 'push'
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: |
+            ${{ github.sha }}
+            ${{ needs.prepare.outputs.docker_image }}:${{env.DOCKER_IMAGE_TAG}}
+            ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+
+      - name: Push image to Amazon ECR
+        id: push-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: |
+            ${{ github.sha }}
+            ${{ needs.prepare.outputs.docker_image }}:${{env.DOCKER_IMAGE_TAG}}
+            ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
+        run: |
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master
       #   with:
@@ -156,31 +186,6 @@ jobs:
       #     vuln-type: 'os,library'
       #     severity: 'CRITICAL'
       #     timeout: 20m0s
-
-      # - name: Build only on Push event
-      #   if: inputs.github_event_name == 'push'
-      #   id: build-image
-      #   env:
-      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #     IMAGE_TAG: |
-      #       ${{ github.sha }}
-      #       ${{ needs.prepare.outputs.docker_image }}:${{env.DOCKER_IMAGE_TAG}}
-      #       ${{ needs.prepare.outputs.docker_image }}:${{ needs.prepare.outputs.version }}
-      #   run: |
-      #     # Build a docker container and
-      #     # push it to ECR so that it can
-      #     # be deployed to ECS.
-      #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-      #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-
-
-      # - name: Push image to Amazon ECR
-      #   id: push-image
-      #   env:
-      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #     IMAGE_TAG: ${{ github.sha }}
-      #   run: |
-      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   # release:
   #   runs-on: [ubuntu-latest, '${{ inputs.environment }}' ]
