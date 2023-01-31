@@ -54,13 +54,12 @@ jobs:
           key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Set environment for ${{ needs.prepare.outputs.branch_name }}
         run: |
           echo "environment=${{ needs.prepare.outputs.branch_name }}" >> $GITHUB_ENV
-
-
-      - name: Checkout
-        uses: actions/checkout@v2
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
