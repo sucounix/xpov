@@ -161,7 +161,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
-            ${{ github.sha }}
+
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
@@ -171,7 +171,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
-            ${{ github.sha }}
             ${{ env.DOCKER_IMAGE_TAG }}
         run: |
           # Build a docker container and
@@ -186,9 +185,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
-            ${{ github.sha }}
             ${{env.DOCKER_IMAGE_TAG}}
-
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
