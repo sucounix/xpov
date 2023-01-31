@@ -46,6 +46,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Git Version
+        id: version
+        uses: codacy/git-version@2.5.3
+        with:
+          release-branch: main
+          dev-branch: dev
+          minor-identifier: feat(
 
   build:
     name: Build Image
@@ -53,6 +60,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.build-image.outputs.image }}
+      version: ${{ needs.prepare.outputs.version }}
+
 
     steps:
       # - name: Maximize build space
