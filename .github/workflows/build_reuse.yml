@@ -55,11 +55,12 @@ jobs:
           dev-branch: dev
           minor-identifier: feat(
 
-      - name: Know the Image Tag
-        run: echo ${{needs.prepare.outputs.version}}
+
       # - name: Set environment for ${{ env.environment }} -ver
       #   run: |
       #     echo "DOCKER_IMAGE_TAG=${{ env.environment }}" >> $GITHUB_ENV
+      - name: Know the Ver
+        run: echo ${steps.version.outputs.version}}
 
   build:
     name: Build Image
