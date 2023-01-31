@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - dev
-      # - stage
+      # - stg
       # - main
     paths:
       - '01-infra/**'
@@ -16,6 +16,30 @@ env:
  TF_ROOT: "../infra"
 
 jobs:
+
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      branch_name: ${{ steps.vars.outputs.branch_name }}
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Set output
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]
+          then
+            echo ::set-output name=branch_name::${{ github.event.pull_request.base.ref }}
+            echo ${{ github.event.pull_request.base.ref }}
+          else
+            echo ::set-output name=branch_name::${GITHUB_REF#refs/*/}
+            echo ${GITHUB_REF#refs/*/}
+            echo ${GITHUB_REF#refs/*/} >> $GITHUB_ENV
+          fi
+          echo "sha_short::${GITHUB_SHA::7}"
+          echo "::set-output name=sha_short::${GITHUB_SHA::7}"
+
   terraform:
     name: "Terraform"
     runs-on: ubuntu-latest
@@ -61,13 +85,13 @@ jobs:
           --var-file="../envs/dev.tfvars"
         # continue-on-error: true
 
-      # - name: Terraform deploy
-      #   # if: inputs.github_event_name == 'push'
-      #   run: |
-      #     terraform apply --auto-approve \
-      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-      #     --var-file="../envs/dev.tfvars"
+      - name: Terraform deploy
+        if: ${{ inputs.github_event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
+        run: |
+          terraform apply --auto-approve \
+          -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          --var-file="../envs/dev.tfvars"
 
   # infracost:
   #   runs-on: ubuntu-latest
