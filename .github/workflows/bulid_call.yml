@@ -53,6 +53,7 @@ jobs:
       environment: ${{ needs.prepare.outputs.branch_name }}
       github_event_name: ${{ github.event_name }}
     secrets:
+      GIT_ACTION_PAT: ${{ secrets.GIT_ACTION_PAT }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       # SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
