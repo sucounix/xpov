@@ -7,6 +7,14 @@ on:
       # - main
     paths:
       - '01-infra/**'
+  pull_request:
+    branches:
+      - "dev"
+      - "stg"
+      - "uat"
+      - "main" #prod
+    paths-ignore:
+      - '01-infra/**'
 
 defaults:
   run:
