@@ -55,14 +55,7 @@ jobs:
           dev-branch: dev
           minor-identifier: feat(
 
-
-      # - name: Set environment for ${{ env.environment }} -ver
-      #   run: |
-      #     echo "DOCKER_IMAGE_TAG=${{ env.environment }}" >> $GITHUB_ENV
-
-
   build:
-
 
     name: Build Image
     # needs: Test
@@ -84,10 +77,7 @@ jobs:
       #     remove-android: 'true'
       #     remove-haskell: 'true'
 
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Know the Ver
-        run: echo ${{needs.prepare.outputs.version}}
+
 
       # - name: Run sonar scan
       #   uses: sonarsource/sonarqube-scan-action@master
@@ -149,7 +139,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
             ${{ github.sha }}
-            ${{ needs.prepare.outputs.version }}
+            # ${{ needs.prepare.outputs.version }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
@@ -171,7 +161,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
             ${{ github.sha }}
-            ${{ needs.prepare.outputs.version }}
+            # ${{ needs.prepare.outputs.version }}
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
@@ -183,7 +173,7 @@ jobs:
           IMAGE_TAG: |
             ${{ github.sha }}
             ${{ env.DOCKER_IMAGE_TAG }}
-            ${{ needs.prepare.outputs.version }}
+            # ${{ needs.prepare.outputs.version }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
@@ -199,7 +189,7 @@ jobs:
           IMAGE_TAG: |
             ${{ github.sha }}
             ${{env.DOCKER_IMAGE_TAG}}
-            ${{ needs.prepare.outputs.version }}
+            # ${{ needs.prepare.outputs.version }}
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
