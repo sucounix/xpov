@@ -74,8 +74,7 @@ jobs:
 
     steps:
 
-      - name: Know the Ver
-        run: echo ${{needs.prepare.outputs.version}}
+
       # - name: Maximize build space
       #   uses: easimon/maximize-build-space@master
       #   with:
@@ -87,6 +86,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Know the Ver
+        run: echo ${{needs.prepare.outputs.version}}
 
       # - name: Run sonar scan
       #   uses: sonarsource/sonarqube-scan-action@master
