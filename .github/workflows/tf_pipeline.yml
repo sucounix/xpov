@@ -99,13 +99,13 @@ jobs:
           --var-file="../envs/$environment.tfvars"
         # continue-on-error: true
 
-      # - name: Terraform deploy
-      #   if: ${{ inputs.github_event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
-      #   run: |
-      #     terraform apply --auto-approve \
-      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-      #     --var-file="../envs/$environment.tfvars"
+      - name: Terraform deploy
+        if: ${{ inputs.github_event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
+        run: |
+          terraform apply --auto-approve \
+          -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          --var-file="../envs/$environment.tfvars"
 
   infracost:
     runs-on: ubuntu-latest
