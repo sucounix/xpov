@@ -44,6 +44,9 @@ jobs:
       docker_image: ${{ steps.vars.outputs.image }}
       docker_tag: ${{ steps.vars.outputs.image_tag }}
       docker_registry: ${{ steps.vars.outputs.docker_registry }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
   build:
     name: Build Image
