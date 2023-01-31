@@ -104,7 +104,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
 
-      - name: Build, tag, and push image to Amazon ECR
+      # - name: Build, tag, and push image to Amazon ECR
+      - name: Build if pr is done on ${{ inputs.environment }} without ${{ inputs.environment }} tag
+        if: ${{ inputs.github_event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
+
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -128,9 +131,8 @@ jobs:
       #     timeout: 20m0s
 
       # - name: Push image to Amazon ECR
-      - name: Build if pr is done on ${{ inputs.environment }} without ${{ inputs.environment }} tag
-        if: ${{ inputs.github_event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
-
+    - name: Build only on Push event
+      if: inputs.github_event_name == 'push'
         id: push-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
