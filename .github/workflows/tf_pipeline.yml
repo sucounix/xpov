@@ -102,7 +102,7 @@ jobs:
       - name: Terraform deploy
         # if: ${{ inputs.github_event_name == 'pull_request' && github.event.pull_request.merged == true }}
         # if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
-        if: inputs.github_event_name == 'push'
+        # if: inputs.github_event_name == 'push'
 
         run: |
           terraform apply --auto-approve \
