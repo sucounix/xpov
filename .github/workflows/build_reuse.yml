@@ -34,16 +34,15 @@ defaults:
 
 jobs:
 
-
   prepare:
     runs-on: [ubuntu-latest, '${{ inputs.environment }}' ]
     outputs:
       version: ${{ steps.version.outputs.version }}
-      secret_list: "${{ steps.vars.outputs.secret_list }}"
-      region: ${{ steps.vars.outputs.region }}
+      # secret_list: "${{ steps.vars.outputs.secret_list }}"
+      # region: ${{ steps.vars.outputs.region }}
       docker_image: ${{ steps.vars.outputs.image }}
       docker_tag: ${{ steps.vars.outputs.image_tag }}
-      docker_registry: ${{ steps.vars.outputs.docker_registry }}
+      # docker_registry: ${{ steps.vars.outputs.docker_registry }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
