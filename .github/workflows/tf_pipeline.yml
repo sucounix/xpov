@@ -64,7 +64,9 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check -recursive -diff
+        run: |
+          echo $ENV
+          terraform fmt -check -recursive -diff
 
       - name: Terraform Init
         id: init
