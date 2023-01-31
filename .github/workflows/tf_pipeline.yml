@@ -73,7 +73,7 @@ jobs:
         id: init
         run: |
             terraform init \
-            -backend-config=../backend/dev.conf
+            -backend-config=../backend/${{env.environment}}.conf
 
       - name: Terraform Validate
         id: validate
@@ -86,7 +86,7 @@ jobs:
           terraform plan \
           -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          --var-file="../envs/dev.tfvars"
+          --var-file="../envs/${{env.environment}}.tfvars"
         # continue-on-error: true
 
       # - name: Terraform deploy
@@ -122,7 +122,7 @@ jobs:
   #                             --format=json \
   #                             --terraform-var=${{ secrets.AWS_ACCESS_KEY_ID }}" \
   #                             --terraform-var=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-  #                             --terraform-var-file="../envs/dev.tfvars" \
+  #                             --terraform-var-file="../envs/${{env.environment}}.tfvars" \
   #                             --out-file=/tmp/infracost-base.json
 
   #     # # Checkout the current PR branch so we can create a diff.
@@ -137,7 +137,7 @@ jobs:
   #                         --compare-to=/tmp/infracost-base.json \
   #                         --terraform-var=${{ secrets.AWS_ACCESS_KEY_ID }}" \
   #                         --terraform-var=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-  #                         --terraform-var-file="../envs/dev.tfvars" \
+  #                         --terraform-var-file="../envs/${{env.environment}}.tfvars" \
   #                         --out-file=/tmp/infracost.json
 
   #     # Posts a comment to the PR using the 'update' behavior.
