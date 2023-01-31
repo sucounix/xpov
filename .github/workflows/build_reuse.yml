@@ -149,7 +149,7 @@ jobs:
 
       - name: Build only on Push event
         if: inputs.github_event_name == 'push'
-        id: build-image
+        id: build-image-withtag
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: |
