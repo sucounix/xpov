@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - dev
-      # - stage
+      # - stg
       # - main
     paths:
       - '02-flask-app/**'
@@ -62,13 +62,13 @@ jobs:
           echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
           echo "CONTAINER_NAME=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
 
-      # - name: Set up Stage environment
-      #   if: endsWith(github.ref, '/stage')
+      # - name: Set up stg environment
+      #   if: endsWith(github.ref, '/stg')
       #   run: |
       #     echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
-      #     echo "ECR_REPOSITORY=prepaire-stage-drug-interaction" >> $GITHUB_ENV
+      #     echo "ECR_REPOSITORY=prepaire-stg-drug-interaction" >> $GITHUB_ENV
       #     echo "ECS_SERVICE=drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_CLUSTER=prepaire-stage-ecs" >> $GITHUB_ENV
+      #     echo "ECS_CLUSTER=prepaire-stg-ecs" >> $GITHUB_ENV
       #     echo "CONTAINER_NAME=drug-interaction" >> $GITHUB_ENV
 
       # - name: Set up Prod environment
@@ -157,14 +157,14 @@ jobs:
           echo "ECS_TASK_DEFINITION=xpovx-task-dev" >> $GITHUB_ENV
           echo "CONTAINER_NAME=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
 
-      # - name: Set up Stage environment
-      #   if: endsWith(github.ref, '/stage')
+      # - name: Set up stg environment
+      #   if: endsWith(github.ref, '/stg')
       #   run: |
       #     echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
-      #     echo "ECR_REPOSITORY=prepaire-stage-drug-interaction" >> $GITHUB_ENV
+      #     echo "ECR_REPOSITORY=prepaire-stg-drug-interaction" >> $GITHUB_ENV
       #     echo "ECS_SERVICE=drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_CLUSTER=prepaire-stage-ecs" >> $GITHUB_ENV
-      #     echo "ECS_TASK_DEFINITION=.aws/stage-drug-interaction-task-definition.json" >> $GITHUB_ENV
+      #     echo "ECS_CLUSTER=prepaire-stg-ecs" >> $GITHUB_ENV
+      #     echo "ECS_TASK_DEFINITION=.aws/stg-drug-interaction-task-definition.json" >> $GITHUB_ENV
       #     echo "CONTAINER_NAME=drug-interaction" >> $GITHUB_ENV
 
       # - name: Set up Prod environment
