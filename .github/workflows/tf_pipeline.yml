@@ -54,9 +54,9 @@ jobs:
           key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Set environment for ${{ env.environment }}
+      - name: Set environment for ${{ needs.prepare.outputs.branch_name }}
         run: |
-          echo "environment=${{ needs.prepare.outputs.branch_name }}"
+          echo "environment=${{ needs.prepare.outputs.branch_name }}" >> $GITHUB_ENV
 
 
       - name: Checkout
@@ -76,7 +76,7 @@ jobs:
         id: init
         run: |
             terraform init \
-            -backend-config=../backend/${{env.environment}}.conf
+            -backend-config=../backend/$environment.conf
 
       - name: Terraform Validate
         id: validate
@@ -89,7 +89,7 @@ jobs:
           terraform plan \
           -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          --var-file="../envs/${{env.environment}}.tfvars"
+          --var-file="../envs/$environment.tfvars"
         # continue-on-error: true
 
       # - name: Terraform deploy
