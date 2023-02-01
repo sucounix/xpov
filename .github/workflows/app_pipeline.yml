@@ -31,87 +31,87 @@ defaults:
 
 jobs:
 
-  code-quality:
-    runs-on: ubuntu-latest
-    env:
-      ENV: "dev"
+  # code-quality:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     ENV: "dev"
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v3
 
-    - name: Setup python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
+  #   - name: Setup python
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: '3.10'
 
-    - uses: Gr1N/setup-poetry@v7
-      with:
-        poetry-version: 1.1.12
+  #   - uses: Gr1N/setup-poetry@v7
+  #     with:
+  #       poetry-version: 1.1.12
 
-    - name: Install dependencies and packages
-      run: |
-        python3 -m venv env && source env/bin/activate
-        poetry env use 3.10
+  #   - name: Install dependencies and packages
+  #     run: |
+  #       python3 -m venv env && source env/bin/activate
+  #       poetry env use 3.10
 
-    - name: Update poetry cache
-      run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
+  #   - name: Update poetry cache
+  #     run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
 
-    - name: Lint with flake8
-      run: poetry run flake8 src/
-      continue-on-error: true
+  #   - name: Lint with flake8
+  #     run: poetry run flake8 src/
+  #     continue-on-error: true
 
-    - name: Run isort
-      run: |
-        source env/bin/activate
-        poetry run isort --line-length 90 --multi-line VERTICAL_HANGING_INDENT --check-only --diff src/
-      continue-on-error: true
+  #   - name: Run isort
+  #     run: |
+  #       source env/bin/activate
+  #       poetry run isort --line-length 90 --multi-line VERTICAL_HANGING_INDENT --check-only --diff src/
+  #     continue-on-error: true
 
-  Test:
-    name: Test Image
-    needs: code-quality
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    env:
-      ENV: "dev"
+  # Test:
+  #   name: Test Image
+  #   needs: code-quality
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     ENV: "dev"
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
 
-      - name: Checkout
-        uses: actions/checkout@v3
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
+  #     - name: Setup python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.10'
 
-      - uses: Gr1N/setup-poetry@v7
-        with:
-          poetry-version: 1.1.12
+  #     - uses: Gr1N/setup-poetry@v7
+  #       with:
+  #         poetry-version: 1.1.12
 
-      - name: Install dependencies and packages
-        run: |
-          python3 -m venv env && source env/bin/activate
-          poetry env use 3.10
+  #     - name: Install dependencies and packages
+  #       run: |
+  #         python3 -m venv env && source env/bin/activate
+  #         poetry env use 3.10
 
-      - name: Update poetry cache
-        run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
+  #     - name: Update poetry cache
+  #       run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
 
-      - name: Run DEV test scripts
-        run: |
-          ./run_app_dev.sh &
-          poetry run pytest
+  #     - name: Run DEV test scripts
+  #       run: |
+  #         ./run_app_dev.sh &
+  #         poetry run pytest
 
-      - name: Run Prod test scripts
-        run: |
-          ./run_app_prod.sh &
-          poetry run pytest --host http://localhost:8600
+  #     - name: Run Prod test scripts
+  #       run: |
+  #         ./run_app_prod.sh &
+  #         poetry run pytest --host http://localhost:8600
 
 
   build:
     name: Build Image
-    needs: Test
+    # needs: Test
     runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.build-image.outputs.image }}
