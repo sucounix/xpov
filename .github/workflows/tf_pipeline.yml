@@ -103,7 +103,7 @@ jobs:
         # continue-on-error: true
 
       - name: Terraform deploy
-        if: inputs.github_event_name == 'push'
+        if: github_event_name == 'push'
         run: |
           terraform apply --auto-approve \
           -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
