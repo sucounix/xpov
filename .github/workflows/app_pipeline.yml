@@ -8,11 +8,22 @@ name: Flask-app workflow
 on:
   push:
     branches:
-      - dev
-      # - stg
-      # - main
+      - "dev"
+      - "stg"
+      # - "main" #prod
     paths:
       - '02-flask-app/**'
+      - '.github/workflows/app*.yml'
+
+  pull_request:
+    branches:
+      - "dev"
+      - "stg"
+      # - "main" #prod
+    paths:
+      - '02-flask-app/**'
+      - '.github/workflows/app*.yml'
+
 defaults:
   run:
     shell: bash
@@ -132,7 +143,7 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Set up Dev environment
-        if: endsWith(github.ref, '/dev')
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev' && github.event.action != 'closed') }}
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
           echo "ECR_REPOSITORY=xpovx-dev-falsk-app" >> $GITHUB_ENV
@@ -141,7 +152,7 @@ jobs:
           echo "CONTAINER_NAME=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
 
       - name: Set up stg environment
-        if: endsWith(github.ref, '/stg')
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/stg') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'stg' && github.event.action != 'closed') }}
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
           echo "ECR_REPOSITORY=xpov-stg-falsk-app" >> $GITHUB_ENV
@@ -233,7 +244,7 @@ jobs:
           echo "ECS_TASK_DEFINITION=xpovx-task-dev" >> $GITHUB_ENV
           echo "CONTAINER_NAME=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
 
-      # - name: Set up stg environment
+      - name: Set up stg environment
         if: endsWith(github.ref, '/stg')
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
