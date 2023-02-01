@@ -146,19 +146,24 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev' && github.event.action != 'closed') }}
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY=xpovx-dev-falsk-app" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpovx-service-dev" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
-          echo "CONTAINER_NAME=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpovx-dev-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpovx-dev-nginx" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovx-container-dev-nginx" >> $GITHUB_ENV
 
       - name: Set up stg environment
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/stg') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'stg' && github.event.action != 'closed') }}
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY=xpov-stg-falsk-app" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpov-service-stg" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpov-cluster-stg" >> $GITHUB_ENV
-          echo "CONTAINER_NAME=xpov-container-stg-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpov-stg-nginx" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpov-stg-nginx" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpov-container-stg-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovx-container-stg-nginx" >> $GITHUB_ENV
+
 
       # - name: Set up Prod environment
       #   if: endsWith(github.ref, '/main')
@@ -190,7 +195,8 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY0:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG ./nginx
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       # - name: Run Trivy vulnerability scanner
