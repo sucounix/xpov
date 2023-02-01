@@ -209,7 +209,7 @@ resource "aws_ecs_service" "main" {
   health_check_grace_period_seconds  = 60
   launch_type                        = "FARGATE"
   scheduling_strategy                = "REPLICA"
-  force_new_deployment               = true
+  # force_new_deployment               = true
 
 
 
