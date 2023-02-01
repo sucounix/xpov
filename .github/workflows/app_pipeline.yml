@@ -196,9 +196,9 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG .
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG"
+          echo "::set-output name=image1::$ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY0:latest ./nginx
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY0:latest"
+          echo "::set-output name=image0::$ECR_REGISTRY/$ECR_REPOSITORY0:latest"
 
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master
