@@ -148,8 +148,8 @@ jobs:
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpovx-service-dev" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpovx-dev-falsk-app" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY1=xpovx-dev-nginx" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpovx-dev-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpovx-dev-nginx" >> $GITHUB_ENV
           echo "CONTAINER_NAME1=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
           echo "CONTAINER_NAME0=xpovx-container-dev-nginx" >> $GITHUB_ENV
 
@@ -159,8 +159,8 @@ jobs:
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpov-service-stg" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpov-cluster-stg" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpov-stg-falsk-app" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY1=xpov-stg-nginx" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpov-stg-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpov-stg-nginx" >> $GITHUB_ENV
           echo "CONTAINER_NAME1=xpov-container-stg-falsk-app" >> $GITHUB_ENV
           echo "CONTAINER_NAME0=xpov-container-stg-nginx" >> $GITHUB_ENV
 
@@ -195,10 +195,10 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY0:$IMAGE_TAG .
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY0:$IMAGE_TAG"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG ./nginx
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG .
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY0:latest ./nginx
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY0:latest"
 
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master
@@ -217,7 +217,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY0:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY0:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG
 
 
@@ -296,10 +296,9 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: /tmp/task-definition.json
-          container-name: ${{ env.CONTAINER_NAME0 }}
-          image: ${{ needs.build.outputs.images }}
           container-name: ${{ env.CONTAINER_NAME1 }}
           image: ${{ needs.build.outputs.images }}
+
 
       - name: Deploy Amazon ECS task definition
         id: deploy-image
