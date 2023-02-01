@@ -159,10 +159,10 @@ jobs:
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpov-service-stg" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpov-cluster-stg" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpov-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpov-stg-falsk-app" >> $GITHUB_ENV
           echo "ECR_REPOSITORY1=xpov-stg-nginx" >> $GITHUB_ENV
           echo "CONTAINER_NAME0=xpov-container-stg-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpovx-container-stg-nginx" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpov-container-stg-nginx" >> $GITHUB_ENV
 
 
       # - name: Set up Prod environment
