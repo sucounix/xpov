@@ -102,13 +102,21 @@ jobs:
           --var-file="../envs/$environment.tfvars"
         # continue-on-error: true
 
-      - name: Terraform deploy
-        if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
-        run: |
-          terraform apply --auto-approve \
-          -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-          -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          --var-file="../envs/${{env.environment}}.tfvars"
+      # - name: Terraform deploy
+      #   if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
+      #   run: |
+      #     terraform apply --auto-approve \
+      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+      #     --var-file="../envs/${{env.environment}}.tfvars"
+
+      # - name: Terraform destroy
+      #   if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
+      #   run: |
+      #     terraform destroy --auto-approve \
+      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+      #     --var-file="../envs/${{env.environment}}.tfvars"
 
   # infracost:
   #   runs-on: ubuntu-latest
