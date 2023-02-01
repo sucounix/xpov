@@ -8,11 +8,22 @@ name: Flask-app workflow
 on:
   push:
     branches:
-      - dev
-      # - stg
-      # - main
+      - "dev"
+      - "stg"
+      # - "main" #prod
     paths:
       - '02-flask-app/**'
+      - '.github/workflows/app*.yml'
+
+  pull_request:
+    branches:
+      - "dev"
+      - "stg"
+      # - "main" #prod
+    paths:
+      - '02-flask-app/**'
+      - '.github/workflows/app*.yml'
+
 defaults:
   run:
     shell: bash
