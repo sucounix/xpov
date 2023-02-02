@@ -1,4 +1,4 @@
-name                = "xpovx"
+name                = "xpov"
 region              = "eu-central-2"
 environment         = "prod"
 availability_zones  = ["eu-central-2a", "eu-central-2b"]
