@@ -68,9 +68,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+
+      - name: Set environment for ${{ needs.prepare.outputs.branch_name }}
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+        run: |
+          echo "environment=prod >> $GITHUB_ENV
+
       - name: Set environment for ${{ needs.prepare.outputs.branch_name }}
         run: |
           echo "environment=${{ needs.prepare.outputs.branch_name }}" >> $GITHUB_ENV
+
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
