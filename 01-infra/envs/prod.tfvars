@@ -1,6 +1,6 @@
-name                = "xpov"
+name                = "xpovx"
 environment         = "prod"
-availability_zones  = ["eu-central-2a"]
+availability_zones  = ["eu-central-1a", "eu-central-1b"]
 private_subnets     = ["10.0.0.0/20", "10.0.32.0/20"]
 public_subnets      = ["10.0.16.0/20", "10.0.48.0/20"]
 tsl_certificate_arn = "arn:aws:acm:us-east-1:086951686584:certificate/445a4127-69fb-47a6-9545-c2c9d9b2e93a"
@@ -16,3 +16,4 @@ application-secrets = {
   "DYNAMO_DB_SECRET"       = "my-dynamo-db-secret"
   "API_KEY_X"              = "my-api-key"
 }
+
