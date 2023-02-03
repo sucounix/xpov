@@ -72,7 +72,7 @@ jobs:
         run: |
           echo "environment=${{ needs.prepare.outputs.branch_name }}" >> $GITHUB_ENV
 
-      - name: Set environment for ${{ needs.prepare.outputs.branch_name }}
+      - name: Set environment for PROD
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
         run: |
           echo "environment=prod" >> $GITHUB_ENV
@@ -108,21 +108,21 @@ jobs:
           --var-file="../envs/$environment.tfvars"
         # continue-on-error: true
 
-      # - name: Terraform deploy
-      #   if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
-      #   run: |
-      #     terraform apply --auto-approve \
-      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-      #     --var-file="../envs/${{env.environment}}.tfvars"
-
-      - name: Terraform destroy
+      - name: Terraform deploy
         if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
         run: |
-          terraform destroy --auto-approve \
+          terraform apply --auto-approve \
           -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           --var-file="../envs/${{env.environment}}.tfvars"
+
+      # - name: Terraform destroy
+      #   if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
+      #   run: |
+      #     terraform destroy --auto-approve \
+      #     -var="aws-access-key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+      #     -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+      #     --var-file="../envs/${{env.environment}}.tfvars"
 
   # infracost:
   #   runs-on: ubuntu-latest
