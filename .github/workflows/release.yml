@@ -1,3 +1,4 @@
+
 name: Release
 
 on:
@@ -11,50 +12,4 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Git Code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.4.0
-        with:
-          ref: ${{ github.push.ref }}
-
-      # - name: Fetch available tags
-      #   run: |
-      #     git fetch --unshallow --tags
-
-      # - name: Get latest release candidate tag
-      #   id: latest_release_candidate_tag
-      #   run: |
-      #     RELEASE_VERSION=$(echo "${{ github.ref_name }}" | cut -d "/" -f 2 )
-      #     LATEST_FOUND_TAG=$(git tag -l --sort=-creatordate "${RELEASE_VERSION}*" | head -n 1)
-      #     if [ -z ${LATEST_FOUND_TAG} ];then
-      #       echo "Release candidate not found, starting from RC1"
-      #       LATEST_FOUND_TAG=${RELEASE_VERSION}-rc0
-      #     fi
-      #     echo "::set-output name=LATEST_TAG::${LATEST_FOUND_TAG}"
-      #     echo "::set-output name=RELEASE_VERSION::${RELEASE_VERSION}"
-      #     echo "${RELEASE_VERSION}"
-      #     echo "${LATEST_TAG}"
-
-      # - name: Bump release candidate version
-      #   id: bump_version
-      #   uses: christian-draeger/increment-semantic-version@1.0.2
-      #   with:
-      #     current-version: ${{ steps.latest_release_candidate_tag.outputs.LATEST_TAG }}
-      #     version-fragment: 'rc'
-
-      # - uses: rickstaa/action-create-tag@v1
-      #   with:
-      #     tag: "${{ steps.bump_version.outputs.next-version }}"
-      #     commit_sha: "${{ github.sha }}"
-      #     message: "Latest release candidate ${{ steps.bump_version.outputs.next-version }}"
-
-
-     - name: Create new release candidate tag
-       uses: actions/github-script@v5
-       with:
-         script: |
-           github.rest.git.createRef({
-             owner: context.repo.owner,
-             repo: context.repo.repo,
-             ref: 'refs/tags/${{ bump_version.outputs.next-version }}',
-             sha: context.sha
-           })
+      - uses: actions/checkout@v2
