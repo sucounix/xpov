@@ -281,7 +281,7 @@ jobs:
       id: Changelog
       uses: metcalfc/changelog-generator@v1.0.0
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        mytoken: "${{ secrets.GITHUB_TOKEN }}"
 
     - name: Git Version
       id: version
