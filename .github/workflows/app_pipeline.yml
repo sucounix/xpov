@@ -272,7 +272,7 @@ jobs:
 
   release:
     runs-on: [self-hosted, '${{ inputs.environment }}' ]
-    needs: build
+    needs: prepare
     if: inputs.github_event_name == 'push'
     steps:
 
