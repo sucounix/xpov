@@ -277,11 +277,11 @@ jobs:
     # needs: build
     steps:
 
-    - name: Generate changelog
-      id: Changelog
-      uses: metcalfc/changelog-generator@v1.0.0
-      with:
-        mytoken: "${{ secrets.GITHUB_TOKEN }}"
+    # - name: Generate changelog
+    #   id: Changelog
+    #   uses: metcalfc/changelog-generator@v1.0.0
+    #   with:
+    #     mytoken: "${{ secrets.GITHUB_TOKEN }}"
 
     - name: Git Version
       id: version
