@@ -10,7 +10,7 @@ on:
     branches:
       - "dev"
       - "stg"
-      # - "main" #prod
+      - "main" #prod
     paths:
       - '02-flask-app/**'
       - '.github/workflows/app*.yml'
@@ -19,7 +19,7 @@ on:
     branches:
       - "dev"
       - "stg"
-      # - "main" #prod
+      - "main" #prod
     paths:
       - '02-flask-app/**'
       - '.github/workflows/app*.yml'
@@ -30,6 +30,44 @@ defaults:
     working-directory: 02-flask-app/
 
 jobs:
+
+
+# prepare:
+#   runs-on: [self-hosted, '${{ inputs.environment }}' ]
+#   outputs:
+#     version: ${{ steps.version.outputs.version }}
+#     topic_prefix: ${{ steps.vars.outputs.topic_prefix }}
+#   steps:
+
+#     - name: Checkout
+#       uses: actions/checkout@v3
+
+#     - name: Set environment for PROD
+#       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+#       run: |
+#         echo "environment=prod" >> $GITHUB_ENV
+
+#     - name: Generate env variables
+#       id: vars
+#       run: |
+
+#         if [ "${{ env.environment }}" == "prod" ]
+#         then
+#           topic_prefix=""
+#         else
+#           topic_prefix="${{ env.environment }}_"
+#         fi
+#         echo ::set-output name=topic_prefix::${topic_prefix}
+
+#     - name: Git Version
+#       id: version
+#       uses: codacy/git-version@2.5.3
+#       with:
+#         release-branch: main
+#         dev-branch: dev
+#         minor-identifier: feat(
+
+
 
   # code-quality:
   #   runs-on: ubuntu-latest
@@ -165,14 +203,16 @@ jobs:
           echo "CONTAINER_NAME0=xpov-container-stg-nginx" >> $GITHUB_ENV
 
 
-      # - name: Set up Prod environment
-      #   if: endsWith(github.ref, '/main')
-      #   run: |
-      #     echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
-      #     echo "ECR_REPOSITORY=prepaire-drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_SERVICE=drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_CLUSTER=prepaire" >> $GITHUB_ENV
-      #     echo "CONTAINER_NAME=drug-interaction" >> $GITHUB_ENV
+      - name: Set up Prod environment
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+        run: |
+          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpovv-prod-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpovv-prod-nginx" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
@@ -230,8 +270,41 @@ jobs:
       #     job: ${{ toJson(job) }}
       #     steps: ${{ toJson(steps) }}
 
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Realses
+        if: ${{ ( github.event_name == 'push' )
+        uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          package-name: ${{env.ACTION_NAME}}
+          command: github-release
+
+
+      - name: tag major and minor versions
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/google-github-actions/release-please-action.git"
+          git tag -d v${{ steps.release.outputs.major }} || true
+          git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git push origin :v${{ steps.release.outputs.major }} || true
+          git push origin :v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git tag -a v${{ steps.release.outputs.major }} -m "Release v${{ steps.release.outputs.major }}"
+          git tag -a v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} -m "Release v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}"
+          git push origin v${{ steps.release.outputs.major }}
+          git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
+
 
   deploy:
+
     name: Deploy image
     if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
@@ -240,6 +313,11 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Set environment for PROD
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+        run: |
+          echo "environment=prod" >> $GITHUB_ENV
 
       - run: echo ${{needs.build.outputs.images}}
 
@@ -266,15 +344,16 @@ jobs:
           echo "CONTAINER_NAME1=xpov-container-stg-falsk-app" >> $GITHUB_ENV
           echo "CONTAINER_NAME0=xpov-container-stg-nginx" >> $GITHUB_ENV
 
-      # - name: Set up Prod environment
-      #   if: endsWith(github.ref, '/main')
-      #   run: |
-      #     echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
-      #     echo "ECR_REPOSITORY=prepaire-drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_SERVICE=drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_CLUSTER=prepaire" >> $GITHUB_ENV
-      #     echo "ECS_TASK_DEFINITION=.aws/prod-drug-interaction-task-definition.json" >> $GITHUB_ENV
-      #     echo "CONTAINER_NAME=drug-interaction" >> $GITHUB_ENV
+      - name: Set up Prod environment
+        if: endsWith(github.ref, '/main')
+        run: |
+          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=xpovv-prod-falsk-app" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=xpov-task-stg" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
