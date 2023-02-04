@@ -284,14 +284,14 @@ jobs:
 
       - name: Bump version and push tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
+        uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GIT_ACTION_PAT }}
-          release_branches: main
+          # release_branches: main
           custom_tag: ${{ needs.prepare.outputs.version }}
 
       - name: Create a GitHub release
-        uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+        uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
