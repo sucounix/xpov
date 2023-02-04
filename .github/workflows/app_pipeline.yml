@@ -70,6 +70,7 @@ jobs:
 
 
   code-quality:
+    needs: prepare
     runs-on: ubuntu-latest
     env:
       ENV: "dev"
