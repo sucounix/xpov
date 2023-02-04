@@ -293,6 +293,13 @@ jobs:
           # release_branches: main
           custom_tag: ${{ needs.prepare.outputs.version }}
 
+      - name: Generate changelog
+        id: Changelog
+        uses: metcalfc/changelog-generator@v1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
