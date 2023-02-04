@@ -16,23 +16,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - name: Fetch available tags
-      #   run: |
-      #     git fetch --unshallow --tags
+      - name: Fetch available tags
+        run: |
+          git fetch --unshallow --tags
 
-      # - name: Get latest release candidate tag
-      #   id: latest_release_candidate_tag
-      #   run: |
-      #     RELEASE_VERSION=$(echo "${{ github.ref_name }}" | cut -d "/" -f 2 )
-      #     LATEST_FOUND_TAG=$(git tag -l --sort=-creatordate "${RELEASE_VERSION}*" | head -n 1)
-      #     if [ -z ${LATEST_FOUND_TAG} ];then
-      #       echo "Release candidate not found, starting from RC1"
-      #       LATEST_FOUND_TAG=${RELEASE_VERSION}-rc0
-      #     fi
-      #     echo "::set-output name=LATEST_TAG::${LATEST_FOUND_TAG}"
-      #     echo "::set-output name=RELEASE_VERSION::${RELEASE_VERSION}"
-      #     echo "${RELEASE_VERSION}"
-      #     echo "${LATEST_TAG}"
+      - name: Get latest release candidate tag
+        id: latest_release_candidate_tag
+        run: |
+          RELEASE_VERSION=$(echo "${{ github.ref_name }}" | cut -d "/" -f 2 )
+          LATEST_FOUND_TAG=$(git tag -l --sort=-creatordate "${RELEASE_VERSION}*" | head -n 1)
+          if [ -z ${LATEST_FOUND_TAG} ];then
+            echo "Release candidate not found, starting from RC1"
+            LATEST_FOUND_TAG=${RELEASE_VERSION}-rc0
+          fi
+          echo "::set-output name=LATEST_TAG::${LATEST_FOUND_TAG}"
+          echo "::set-output name=RELEASE_VERSION::${RELEASE_VERSION}"
+          echo "${RELEASE_VERSION}"
+          echo "${LATEST_TAG}"
 
       - name: Bump release candidate version
         id: bump_version
