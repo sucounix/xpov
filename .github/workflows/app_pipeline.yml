@@ -185,12 +185,12 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev' && github.event.action != 'closed') }}
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECS_SERVICE=xpovx-service-dev" >> $GITHUB_ENV
-          echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY1=xpovx-dev-falsk-app" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpovx-dev-nginx" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME0=xpovx-container-dev-nginx" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovii-service-dev" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovii-cluster-dev" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpovii-dev-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpovii-dev-nginx" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovii-container-dev-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovii-container-dev-nginx" >> $GITHUB_ENV
 
       - name: Set up stg environment
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/stg') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'stg' && github.event.action != 'closed') }}
@@ -208,12 +208,12 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
-          echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY1=xpovv-prod-falsk-app" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpovv-prod-nginx" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovii-service-prod" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovii-cluster-prod" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpovii-prod-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpovii-prod-nginx" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovii-container-prod-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovii-container-prod-nginx" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
@@ -332,12 +332,12 @@ jobs:
         if: endsWith(github.ref, '/dev')
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY=xpovx-dev-falsk-app" >> $GITHUB_ENV
-          echo "ECS_SERVICE=xpovx-service-dev" >> $GITHUB_ENV
-          echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
-          echo "ECS_TASK_DEFINITION=xpovx-task-dev" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME0=xpovx-container-dev-nginx" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=xpovii-dev-falsk-app" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovii-service-dev" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovii-cluster-dev" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=xpovii-task-dev" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovii-container-dev-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovii-container-dev-nginx" >> $GITHUB_ENV
 
 
       - name: Set up stg environment
@@ -355,12 +355,12 @@ jobs:
         if: endsWith(github.ref, '/main')
         run: |
           echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY=xpovv-prod-falsk-app" >> $GITHUB_ENV
-          echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
-          echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
-          echo "ECS_TASK_DEFINITION=xpovv-task-prod" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=xpovii-prod-falsk-app" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovii-service-prod" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovii-cluster-prod" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=xpovii-task-prod" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovii-container-prod-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovii-container-prod-nginx" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
