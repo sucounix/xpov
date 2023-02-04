@@ -1,4 +1,4 @@
-name                = "xpovv"
+name                = "xpovii"
 environment         = "prod"
 availability_zones  = ["eu-central-1a", "eu-central-1b"]
 private_subnets     = ["10.0.0.0/20", "10.0.32.0/20"]
