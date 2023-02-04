@@ -2,12 +2,14 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - "prod"
-  pull_request:
-    branches:
-      - "prod"
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: string
+        default: DEV
+        required: true
+
+
 jobs:
   release:
     permissions:
