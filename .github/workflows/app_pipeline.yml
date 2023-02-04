@@ -10,7 +10,7 @@ on:
     branches:
       - "dev"
       - "stg"
-      # - "main" #prod
+      - "main" #prod
     paths:
       - '02-flask-app/**'
       - '.github/workflows/app*.yml'
@@ -19,7 +19,7 @@ on:
     branches:
       - "dev"
       - "stg"
-      # - "main" #prod
+      - "main" #prod
     paths:
       - '02-flask-app/**'
       - '.github/workflows/app*.yml'
@@ -31,87 +31,125 @@ defaults:
 
 jobs:
 
-  # code-quality:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     ENV: "dev"
 
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
+# prepare:
+#   runs-on: [self-hosted, '${{ inputs.environment }}' ]
+#   outputs:
+#     version: ${{ steps.version.outputs.version }}
+#     topic_prefix: ${{ steps.vars.outputs.topic_prefix }}
+#   steps:
 
-  #   - name: Setup python
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: '3.10'
+#     - name: Checkout
+#       uses: actions/checkout@v3
 
-  #   - uses: Gr1N/setup-poetry@v7
-  #     with:
-  #       poetry-version: 1.1.12
+#     - name: Set environment for PROD
+#       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+#       run: |
+#         echo "environment=prod" >> $GITHUB_ENV
 
-  #   - name: Install dependencies and packages
-  #     run: |
-  #       python3 -m venv env && source env/bin/activate
-  #       poetry env use 3.10
+#     - name: Generate env variables
+#       id: vars
+#       run: |
 
-  #   - name: Update poetry cache
-  #     run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
+#         if [ "${{ env.environment }}" == "prod" ]
+#         then
+#           topic_prefix=""
+#         else
+#           topic_prefix="${{ env.environment }}_"
+#         fi
+#         echo ::set-output name=topic_prefix::${topic_prefix}
 
-  #   - name: Lint with flake8
-  #     run: poetry run flake8 src/
-  #     continue-on-error: true
+#     - name: Git Version
+#       id: version
+#       uses: codacy/git-version@2.5.3
+#       with:
+#         release-branch: main
+#         dev-branch: dev
+#         minor-identifier: feat(
 
-  #   - name: Run isort
-  #     run: |
-  #       source env/bin/activate
-  #       poetry run isort --line-length 90 --multi-line VERTICAL_HANGING_INDENT --check-only --diff src/
-  #     continue-on-error: true
 
-  # Test:
-  #   name: Test Image
-  #   needs: code-quality
-  #   # The type of runner that the job will run on
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     ENV: "dev"
 
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
+  code-quality:
+    runs-on: ubuntu-latest
+    env:
+      ENV: "dev"
 
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
 
-  #     - name: Setup python
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: '3.10'
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
 
-  #     - uses: Gr1N/setup-poetry@v7
-  #       with:
-  #         poetry-version: 1.1.12
+    - uses: Gr1N/setup-poetry@v7
+      with:
+        poetry-version: 1.1.12
 
-  #     - name: Install dependencies and packages
-  #       run: |
-  #         python3 -m venv env && source env/bin/activate
-  #         poetry env use 3.10
+    - name: Install dependencies and packages
+      run: |
+        python3 -m venv env && source env/bin/activate
+        poetry env use 3.10
 
-  #     - name: Update poetry cache
-  #       run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
+    - name: Update poetry cache
+      run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
 
-  #     - name: Run DEV test scripts
-  #       run: |
-  #         ./run_app_dev.sh &
-  #         poetry run pytest
+    - name: Lint with flake8
+      run: poetry run flake8 src/
+      continue-on-error: true
 
-  #     - name: Run Prod test scripts
-  #       run: |
-  #         ./run_app_prod.sh &
-  #         poetry run pytest --host http://localhost:8600
+    - name: Run isort
+      run: |
+        source env/bin/activate
+        poetry run isort --line-length 90 --multi-line VERTICAL_HANGING_INDENT --check-only --diff src/
+      continue-on-error: true
+
+  Test:
+    name: Test Image
+    needs: code-quality
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      ENV: "dev"
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.1.12
+
+      - name: Install dependencies and packages
+        run: |
+          python3 -m venv env && source env/bin/activate
+          poetry env use 3.10
+
+      - name: Update poetry cache
+        run: rm poetry.lock && poetry env use 3.10 && poetry install --no-interaction
+
+      - name: Run DEV test scripts
+        run: |
+          ./run_app_dev.sh &
+          poetry run pytest
+
+      - name: Run Prod test scripts
+        run: |
+          ./run_app_prod.sh &
+          poetry run pytest --host http://localhost:8600
 
 
   build:
     name: Build Image
-    # needs: Test
+    needs: Test
     runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.build-image.outputs.image }}
@@ -165,14 +203,16 @@ jobs:
           echo "CONTAINER_NAME0=xpov-container-stg-nginx" >> $GITHUB_ENV
 
 
-      # - name: Set up Prod environment
-      #   if: endsWith(github.ref, '/main')
-      #   run: |
-      #     echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
-      #     echo "ECR_REPOSITORY=prepaire-drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_SERVICE=drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_CLUSTER=prepaire" >> $GITHUB_ENV
-      #     echo "CONTAINER_NAME=drug-interaction" >> $GITHUB_ENV
+      - name: Set up Prod environment
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+        run: |
+          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY1=xpovv-prod-falsk-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY0=xpovv-prod-nginx" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
@@ -230,8 +270,75 @@ jobs:
       #     job: ${{ toJson(job) }}
       #     steps: ${{ toJson(steps) }}
 
+  # release-please:
+  #   name: Release
+  #   if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
+  #   runs-on: ubuntu-latest
+  #   # needs: build
+  #   steps:
+
+  #   - name: Checkout
+  #     uses: actions/checkout@v3
+  #   - name: Setup git
+  #     run: |
+  #       git config user.name "$GITHUB_ACTOR"
+  #       git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+  #   - name: Get new tag version
+  #     run: |
+  #       echo "prodTagVersion=$(git describe --tags --abbrev=0 | \
+  #       awk -F'[.]'  '{ major=$1;minor=$2;patch=$3;patch += 1;minor += patch / 20;patch = patch % 20;printf( "%d.%d.%d\n", major, minor, patch );}' )" \
+  #       >> $GITHUB_ENV
+
+  #   - name: set stg tag version
+  #     run: echo stgTagVersion=$(echo $prodTagVersion | cut -c -3) >> $GITHUB_ENV
+
+  #   - name: Update tag for stg
+  #     run: git tag -f -a $stgTagVersion -m "stg" && sleep 1 && git push origin $stgTagVersion --force
+
+  #   - name: Update tag for prod
+  #     run: git tag -a $prodTagVersion -m "prod" && sleep 1 && git push origin $prodTagVersion
+
+  #     - uses: "marvinpinto/action-automatic-releases@latest"
+  #       with:
+  #         repo_token: "${{ secrets.GITHUB_TOKEN }}"
+  #         automatic_release_tag: "latest"
+  #         prerelease: true
+  #         title: "Development Build"
+    # - name: Generate changelog
+    #   id: Changelog
+    #   uses: metcalfc/changelog-generator@v1.0.0
+    #   with:
+    #     mytoken: "${{ secrets.GITHUB_TOKEN }}"
+
+    # - name: Git Version
+    #   id: version
+    #   uses: codacy/git-version@2.5.3
+    #   with:
+    #     release-branch: main
+    #     dev-branch: dev
+    #     minor-identifier: feat(
+
+
+
+    # - name: Create Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    #   with:
+    #     tag_name: "${{ steps.version.outputs.version }}"
+    #     release_name: "${{ steps.version.outputs.version }}"
+    #     body: ${{ steps.Changelog.outputs.changelog }}
+    #     draft: false
+    #     prerelease: false
+    #     commitish: main
+
+
+
 
   deploy:
+
     name: Deploy image
     if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
@@ -240,6 +347,11 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Set environment for PROD
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+        run: |
+          echo "environment=prod" >> $GITHUB_ENV
 
       - run: echo ${{needs.build.outputs.images}}
 
@@ -266,15 +378,16 @@ jobs:
           echo "CONTAINER_NAME1=xpov-container-stg-falsk-app" >> $GITHUB_ENV
           echo "CONTAINER_NAME0=xpov-container-stg-nginx" >> $GITHUB_ENV
 
-      # - name: Set up Prod environment
-      #   if: endsWith(github.ref, '/main')
-      #   run: |
-      #     echo "AWS_REGION=us-east-1" >> $GITHUB_ENV
-      #     echo "ECR_REPOSITORY=prepaire-drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_SERVICE=drug-interaction" >> $GITHUB_ENV
-      #     echo "ECS_CLUSTER=prepaire" >> $GITHUB_ENV
-      #     echo "ECS_TASK_DEFINITION=.aws/prod-drug-interaction-task-definition.json" >> $GITHUB_ENV
-      #     echo "CONTAINER_NAME=drug-interaction" >> $GITHUB_ENV
+      - name: Set up Prod environment
+        if: endsWith(github.ref, '/main')
+        run: |
+          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=xpovv-prod-falsk-app" >> $GITHUB_ENV
+          echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=xpov-task-stg" >> $GITHUB_ENV
+          echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
+          echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
