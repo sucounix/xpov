@@ -271,7 +271,7 @@ jobs:
   #     #     steps: ${{ toJson(steps) }}
 
   release:
-    runs-on: [self-hosted, '${{ inputs.environment }}' ]
+    runs-on: ubuntu-latest
     needs: prepare
     # if: inputs.github_event_name == 'push'
     steps:
