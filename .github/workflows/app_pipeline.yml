@@ -32,40 +32,40 @@ defaults:
 jobs:
 
 
-prepare:
-  runs-on: ubuntu-latest
-  outputs:
-    version: ${{ steps.version.outputs.version }}
-    topic_prefix: ${{ steps.vars.outputs.topic_prefix }}
-  steps:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      topic_prefix: ${{ steps.vars.outputs.topic_prefix }}
+    steps:
 
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Set environment for PROD
-      if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
-      run: |
-        echo "environment=prod" >> $GITHUB_ENV
+      - name: Set environment for PROD
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+        run: |
+          echo "environment=prod" >> $GITHUB_ENV
 
-    - name: Generate env variables
-      id: vars
-      run: |
+      - name: Generate env variables
+        id: vars
+        run: |
 
-        if [ "${{ env.environment }}" == "prod" ]
-        then
-          topic_prefix=""
-        else
-          topic_prefix="${{ env.environment }}_"
-        fi
-        echo ::set-output name=topic_prefix::${topic_prefix}
+          if [ "${{ env.environment }}" == "prod" ]
+          then
+            topic_prefix=""
+          else
+            topic_prefix="${{ env.environment }}_"
+          fi
+          echo ::set-output name=topic_prefix::${topic_prefix}
 
-    - name: Git Version
-      id: version
-      uses: codacy/git-version@2.5.3
-      with:
-        release-branch: main
-        dev-branch: dev
-        minor-identifier: feat(
+      - name: Git Version
+        id: version
+        uses: codacy/git-version@2.5.3
+        with:
+          release-branch: main
+          dev-branch: dev
+          minor-identifier: feat(
 
 
 
