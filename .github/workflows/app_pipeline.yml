@@ -34,8 +34,6 @@ jobs:
 
 
   prepare:
-    permissions:
-      contents: write
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -274,6 +272,8 @@ jobs:
   #     #     steps: ${{ toJson(steps) }}
 
   release:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     needs: prepare
     # if: inputs.github_event_name == 'push'
