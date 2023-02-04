@@ -32,7 +32,7 @@ jobs:
         id: rc_version
 
       - name: Increment Release Candidate
-        if: contains(steps.get-latest-tag.outputs.tag, steps.rc_version.outputs.RC_VERSION) == true
+        # if: contains(steps.get-latest-tag.outputs.tag, steps.rc_version.outputs.RC_VERSION) == true
         id: increment-release-candidate
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
