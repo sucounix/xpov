@@ -33,7 +33,7 @@ jobs:
 
 
 prepare:
-  runs-on: [ ubuntu-latest ]
+  runs-on: ubuntu-latest
   outputs:
     version: ${{ steps.version.outputs.version }}
     topic_prefix: ${{ steps.vars.outputs.topic_prefix }}
