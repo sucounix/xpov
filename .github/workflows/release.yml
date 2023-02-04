@@ -34,12 +34,12 @@ jobs:
       #     echo "${RELEASE_VERSION}"
       #     echo "${LATEST_TAG}"
 
-      # - name: Bump release candidate version
-      #   id: bump_version
-      #   uses: christian-draeger/increment-semantic-version@1.0.2
-      #   with:
-      #     current-version: ${{ steps.latest_release_candidate_tag.outputs.LATEST_TAG }}
-      #     version-fragment: 'rc'
+      - name: Bump release candidate version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.latest_release_candidate_tag.outputs.LATEST_TAG }}
+          version-fragment: 'rc'
 
       # - uses: rickstaa/action-create-tag@v1
       #   with:
