@@ -48,13 +48,13 @@ jobs:
       #     message: "Latest release candidate ${{ steps.bump_version.outputs.next-version }}"
 
 
-     - name: Create new release candidate tag
-       uses: actions/github-script@v5
-       with:
-         script: |
-           github.rest.git.createRef({
-             owner: context.repo.owner,
-             repo: context.repo.repo,
-             ref: 'refs/tags/${{ bump_version.outputs.next-version }}',
-             sha: context.sha
-           })
+      - name: Create new release candidate tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ bump_version.outputs.next-version }}',
+              sha: context.sha
+            })
