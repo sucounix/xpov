@@ -2,8 +2,12 @@
 name: Release
 
 on:
-  workflow_dispatch:
-
+  push:
+    branches:
+      - "prod"
+  pull_request:
+    branches:
+      - "prod"
 jobs:
   release:
     permissions:
