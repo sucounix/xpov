@@ -13,7 +13,6 @@ jobs:
       issues: write
       pull-requests: write
     runs-on: ubuntu-latest
-    steps:
     outputs:
       incremented-release-candidate-version: ${{ steps.increment-release-candidate.outputs.next-version }}
       initial-release-candidate-version: ${{ steps.new-release-candidate-version.outputs.next-version }}
