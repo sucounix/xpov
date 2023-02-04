@@ -14,47 +14,69 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+    outputs:
+      incremented-release-candidate-version: ${{ steps.increment-release-candidate.outputs.next-version }}
+      initial-release-candidate-version: ${{ steps.new-release-candidate-version.outputs.next-version }}
+    
+    steps:
+      - name: Checkout Current Branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+        
+      - name: Get Latest Prerelease Tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+          
+      - name: Get rc_version From VERSION
+        run: echo "RC_VERSION=$(jq -e -r .rc_version VERSION)" >> $GITHUB_OUTPUT
+        id: rc_version
 
-      - name: Fetch available tags
-        run: |
-          git fetch --unshallow --tags
-
-      - name: Get latest release candidate tag
-        id: latest_release_candidate_tag
-        run: |
-          RELEASE_VERSION=$(echo "${{ github.ref_name }}" | cut -d "/" -f 2 )
-          LATEST_FOUND_TAG=$(git tag -l --sort=-creatordate "${RELEASE_VERSION}*" | head -n 1)
-          if [ -z ${LATEST_FOUND_TAG} ];then
-            echo "Release candidate not found, starting from RC1"
-            LATEST_FOUND_TAG=${RELEASE_VERSION}-rc0
-          fi
-          echo "::set-output name=LATEST_TAG::${LATEST_FOUND_TAG}"
-          echo "::set-output name=RELEASE_VERSION::${RELEASE_VERSION}"
-          echo "${RELEASE_VERSION}"
-          echo "${LATEST_TAG}"
-
-      - name: Bump release candidate version
-        id: bump_version
+      - name: Increment Release Candidate
+        if: contains(steps.get-latest-tag.outputs.tag, steps.rc_version.outputs.RC_VERSION) == true
+        id: increment-release-candidate
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{ steps.latest_release_candidate_tag.outputs.LATEST_TAG }}
-          version-fragment: 'rc'
-
-      - uses: rickstaa/action-create-tag@v1
+          current-version: ${{ steps.get-latest-tag.outputs.tag }}
+          version-fragment: rc        
+          
+      - name: Create New Release Candidate Version
+        if: contains(steps.get-latest-tag.outputs.tag, steps.rc_version.outputs.RC_VERSION) == false
+        id: new-release-candidate-version
+        uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          tag: "${{ steps.bump_version.outputs.next-version }}"
-          commit_sha: "${{ github.sha }}"
-          message: "Latest release candidate ${{ steps.bump_version.outputs.next-version }}"
+          current-version: ${{ steps.rc_version.outputs.RC_VERSION }}
+          version-fragment: rc
 
-
-      - name: Create new release candidate tag
-        uses: actions/github-script@v5
+  create-prerelease:
+    runs-on:
+      - ubuntu-latest
+    
+    needs:
+      - get-change-prerelease-tag
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: PreRelease Incremented Tag
+        if: needs.get-change-prerelease-tag.outputs.incremented-release-candidate-version != ''
+        id: incremented-release
+        uses: igorrs/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{ steps.bump_version.outputs.next-version }}',
-              sha: context.sha
-            })
+          tag_name: ${{ needs.get-change-prerelease-tag.outputs.incremented-release-candidate-version }}
+          release_name: ${{ needs.get-change-prerelease-tag.outputs.incremented-release-candidate-version }}
+          prerelease: true
+          
+      - name: PreRelease New Tag
+        if: needs.get-change-prerelease-tag.outputs.initial-release-candidate-version != ''
+        id: new-release
+        uses: igorrs/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.get-change-prerelease-tag.outputs.initial-release-candidate-version }}
+          release_name: ${{ needs.get-change-prerelease-tag.outputs.initial-release-candidate-version }}
+          prerelease: true
