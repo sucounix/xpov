@@ -28,48 +28,49 @@ defaults:
   run:
     shell: bash
     working-directory: 02-flask-app/
+permissions: {}
 
 jobs:
 
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      topic_prefix: ${{ steps.vars.outputs.topic_prefix }}
+    steps:
 
-# prepare:
-#   runs-on: [self-hosted, '${{ inputs.environment }}' ]
-#   outputs:
-#     version: ${{ steps.version.outputs.version }}
-#     topic_prefix: ${{ steps.vars.outputs.topic_prefix }}
-#   steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-#     - name: Checkout
-#       uses: actions/checkout@v3
+      - name: Set environment for PROD
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+        run: |
+          echo "environment=prod" >> $GITHUB_ENV
 
-#     - name: Set environment for PROD
-#       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
-#       run: |
-#         echo "environment=prod" >> $GITHUB_ENV
+      - name: Generate env variables
+        id: vars
+        run: |
 
-#     - name: Generate env variables
-#       id: vars
-#       run: |
+          if [ "${{ env.environment }}" == "prod" ]
+          then
+            topic_prefix=""
+          else
+            topic_prefix="${{ env.environment }}_"
+          fi
+          echo ::set-output name=topic_prefix::${topic_prefix}
 
-#         if [ "${{ env.environment }}" == "prod" ]
-#         then
-#           topic_prefix=""
-#         else
-#           topic_prefix="${{ env.environment }}_"
-#         fi
-#         echo ::set-output name=topic_prefix::${topic_prefix}
-
-#     - name: Git Version
-#       id: version
-#       uses: codacy/git-version@2.5.3
-#       with:
-#         release-branch: main
-#         dev-branch: dev
-#         minor-identifier: feat(
+      - name: Git Version
+        id: version
+        uses: codacy/git-version@2.5.3
+        with:
+          release-branch: main
+          dev-branch: dev
+          minor-identifier: feat(
 
 
 
   code-quality:
+    needs: prepare
     runs-on: ubuntu-latest
     env:
       ENV: "dev"
@@ -270,70 +271,34 @@ jobs:
       #     job: ${{ toJson(job) }}
       #     steps: ${{ toJson(steps) }}
 
-  # release-please:
-  #   name: Release
-  #   if: ${{ ( github.event_name == 'push' ) || ( github.event_name == 'pull_request' && github.event.action == 'closed') }}
-  #   runs-on: ubuntu-latest
-  #   # needs: build
-  #   steps:
+  release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+    steps:
 
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
-  #   - name: Setup git
-  #     run: |
-  #       git config user.name "$GITHUB_ACTOR"
-  #       git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
-  #   - name: Get new tag version
-  #     run: |
-  #       echo "prodTagVersion=$(git describe --tags --abbrev=0 | \
-  #       awk -F'[.]'  '{ major=$1;minor=$2;patch=$3;patch += 1;minor += patch / 20;patch = patch % 20;printf( "%d.%d.%d\n", major, minor, patch );}' )" \
-  #       >> $GITHUB_ENV
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # release_branches: main
+          custom_tag: ${{ needs.prepare.outputs.version }}
 
-  #   - name: set stg tag version
-  #     run: echo stgTagVersion=$(echo $prodTagVersion | cut -c -3) >> $GITHUB_ENV
-
-  #   - name: Update tag for stg
-  #     run: git tag -f -a $stgTagVersion -m "stg" && sleep 1 && git push origin $stgTagVersion --force
-
-  #   - name: Update tag for prod
-  #     run: git tag -a $prodTagVersion -m "prod" && sleep 1 && git push origin $prodTagVersion
-
-  #     - uses: "marvinpinto/action-automatic-releases@latest"
-  #       with:
-  #         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-  #         automatic_release_tag: "latest"
-  #         prerelease: true
-  #         title: "Development Build"
-    # - name: Generate changelog
-    #   id: Changelog
-    #   uses: metcalfc/changelog-generator@v1.0.0
-    #   with:
-    #     mytoken: "${{ secrets.GITHUB_TOKEN }}"
-
-    # - name: Git Version
-    #   id: version
-    #   uses: codacy/git-version@2.5.3
-    #   with:
-    #     release-branch: main
-    #     dev-branch: dev
-    #     minor-identifier: feat(
-
-
-
-    # - name: Create Release
-    #   id: create_release
-    #   uses: actions/create-release@v1
-    #   env:
-    #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-    #   with:
-    #     tag_name: "${{ steps.version.outputs.version }}"
-    #     release_name: "${{ steps.version.outputs.version }}"
-    #     body: ${{ steps.Changelog.outputs.changelog }}
-    #     draft: false
-    #     prerelease: false
-    #     commitish: main
-
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
 
 
 
@@ -385,7 +350,7 @@ jobs:
           echo "ECR_REPOSITORY=xpovv-prod-falsk-app" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
-          echo "ECS_TASK_DEFINITION=xpov-task-stg" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=xpovv-task-prod" >> $GITHUB_ENV
           echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
           echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
 
