@@ -290,11 +290,6 @@ jobs:
         awk -F'[.]'  '{ major=$1;minor=$2;patch=$3;patch += 1;minor += patch / 20;patch = patch % 20;printf( "%d.%d.%d\n", major, minor, patch );}' )" \
         >> $GITHUB_ENV
 
-    - name: set stg tag version
-      run: echo stgTagVersion=$(echo $prodTagVersion | cut -c -3) >> $GITHUB_ENV
-
-    - name: Update tag for stg
-      run: git tag -f -a $stgTagVersion -m "stg" && sleep 1 && git push origin $stgTagVersion --force
 
     - name: Update tag for prod
       run: git tag -a $prodTagVersion -m "prod" && sleep 1 && git push origin $prodTagVersion
