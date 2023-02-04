@@ -385,7 +385,7 @@ jobs:
           echo "ECR_REPOSITORY=xpovv-prod-falsk-app" >> $GITHUB_ENV
           echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
           echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
-          echo "ECS_TASK_DEFINITION=xpov-task-stg" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=xpovv-task-prod" >> $GITHUB_ENV
           echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
           echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
 
