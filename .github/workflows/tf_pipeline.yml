@@ -25,6 +25,7 @@ defaults:
     working-directory: 01-infra/infra
 env:
  TF_ROOT: "../infra"
+permissions: {}
 
 jobs:
 
@@ -52,6 +53,8 @@ jobs:
           echo "::set-output name=sha_short::${GITHUB_SHA::7}"
 
   terraform:
+    permissions:
+     contents: write
     name: "Terraform"
     needs: prepare
     runs-on: ubuntu-latest
@@ -107,6 +110,7 @@ jobs:
           -var="aws-secret-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           --var-file="../envs/$environment.tfvars"
         # continue-on-error: true
+
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
