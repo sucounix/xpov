@@ -280,6 +280,8 @@ jobs:
     - name: Generate changelog
       id: Changelog
       uses: metcalfc/changelog-generator@v1.0.0
+      with:
+        myToken: "${{ secrets.GITHUB_TOKEN }}"
 
     - name: Git Version
       id: version
