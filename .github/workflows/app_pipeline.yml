@@ -270,21 +270,21 @@ jobs:
       #     job: ${{ toJson(job) }}
       #     steps: ${{ toJson(steps) }}
 
-name: release-please
-jobs:
-  release-please:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+      - name: release-please
+        jobs:
+          release-please:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/checkout@v2
 
-      - name: Realses
-        if: ${{ ( github.event_name == 'push' )
-        uses: google-github-actions/release-please-action@v3
-        id: release
-        with:
-          release-type: node
-          package-name: ${{env.ACTION_NAME}}
-          command: github-release
+              - name: Realses
+                if: ${{ ( github.event_name == 'push' )
+                uses: google-github-actions/release-please-action@v3
+                id: release
+                with:
+                  release-type: node
+                  package-name: ${{env.ACTION_NAME}}
+                  command: github-release
 
 
       - name: tag major and minor versions
