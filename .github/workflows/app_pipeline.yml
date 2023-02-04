@@ -276,35 +276,41 @@ jobs:
     runs-on: ubuntu-latest
     # needs: build
     steps:
+    
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+    # # - name: Generate changelog
+    # #   id: Changelog
+    # #   uses: metcalfc/changelog-generator@v1.0.0
+    # #   with:
+    # #     mytoken: "${{ secrets.GITHUB_TOKEN }}"
 
-    # - name: Generate changelog
-    #   id: Changelog
-    #   uses: metcalfc/changelog-generator@v1.0.0
+    # - name: Git Version
+    #   id: version
+    #   uses: codacy/git-version@2.5.3
     #   with:
-    #     mytoken: "${{ secrets.GITHUB_TOKEN }}"
-
-    - name: Git Version
-      id: version
-      uses: codacy/git-version@2.5.3
-      with:
-        release-branch: main
-        dev-branch: dev
-        minor-identifier: feat(
+    #     release-branch: main
+    #     dev-branch: dev
+    #     minor-identifier: feat(
 
 
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      with:
-        tag_name: "${{ env.VERSION }}"
-        release_name: "${{ env.VERSION }}"
-        body: ${{ steps.Changelog.outputs.changelog }}
-        draft: false
-        prerelease: false
-        commitish: main
+    # - name: Create Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    #   with:
+    #     tag_name: "${{ steps.version.outputs.version }}"
+    #     release_name: "${{ steps.version.outputs.version }}"
+    #     body: ${{ steps.Changelog.outputs.changelog }}
+    #     draft: false
+    #     prerelease: false
+    #     commitish: main
 
 
 
