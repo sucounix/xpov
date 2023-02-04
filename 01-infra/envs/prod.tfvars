@@ -1,4 +1,4 @@
-name                = "xpovx"
+name                = "xpovv"
 environment         = "prod"
 availability_zones  = ["eu-central-1a", "eu-central-1b"]
 private_subnets     = ["10.0.0.0/20", "10.0.32.0/20"]
@@ -16,4 +16,3 @@ application-secrets = {
   "DYNAMO_DB_SECRET"       = "my-dynamo-db-secret"
   "API_KEY_X"              = "my-api-key"
 }
-
