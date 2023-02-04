@@ -28,11 +28,14 @@ defaults:
   run:
     shell: bash
     working-directory: 02-flask-app/
+permissions: {}
 
 jobs:
 
 
   prepare:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
