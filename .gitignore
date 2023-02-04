@@ -335,3 +335,4 @@ credentials.json
 
 tmp/
 secret.tfvars
+xpov.code-workspace
