@@ -147,128 +147,128 @@ jobs:
   #         poetry run pytest --host http://localhost:8600
 
 
-  build:
-    name: Build Image
-    # needs: Test
-    runs-on: ubuntu-latest
-    outputs:
-      images: ${{ steps.build-image.outputs.image }}
+  # build:
+  #   name: Build Image
+  #   # needs: Test
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     images: ${{ steps.build-image.outputs.image }}
 
-    steps:
-      # - name: Maximize build space
-      #   uses: easimon/maximize-build-space@master
-      #   with:
-      #     root-reserve-mb: 46080
-      #     swap-size-mb: 1024
-      #     remove-dotnet: 'true'
-      #     remove-android: 'true'
-      #     remove-haskell: 'true'
+  #   steps:
+  #     # - name: Maximize build space
+  #     #   uses: easimon/maximize-build-space@master
+  #     #   with:
+  #     #     root-reserve-mb: 46080
+  #     #     swap-size-mb: 1024
+  #     #     remove-dotnet: 'true'
+  #     #     remove-android: 'true'
+  #     #     remove-haskell: 'true'
 
-      - name: Checkout
-        uses: actions/checkout@v3
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      # - name: Run sonar scan
-      #   uses: sonarsource/sonarqube-scan-action@master
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # # following lines. This would typically be used to fail a deployment.
-      # - name: Sonar quality gate action
-      #   uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #     # - name: Run sonar scan
+  #     #   uses: sonarsource/sonarqube-scan-action@master
+  #     #   env:
+  #     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #     #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  #     # # If you wish to fail your job when the Quality Gate is red, uncomment the
+  #     # # following lines. This would typically be used to fail a deployment.
+  #     # - name: Sonar quality gate action
+  #     #   uses: sonarsource/sonarqube-quality-gate-action@master
+  #     #   timeout-minutes: 5
+  #     #   env:
+  #     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Set up Dev environment
-        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev' && github.event.action != 'closed') }}
-        run: |
-          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECS_SERVICE=xpovx-service-dev" >> $GITHUB_ENV
-          echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY1=xpovx-dev-falsk-app" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpovx-dev-nginx" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME0=xpovx-container-dev-nginx" >> $GITHUB_ENV
+  #     - name: Set up Dev environment
+  #       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev' && github.event.action != 'closed') }}
+  #       run: |
+  #         echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+  #         echo "ECS_SERVICE=xpovx-service-dev" >> $GITHUB_ENV
+  #         echo "ECS_CLUSTER=xpovx-cluster-dev" >> $GITHUB_ENV
+  #         echo "ECR_REPOSITORY1=xpovx-dev-falsk-app" >> $GITHUB_ENV
+  #         echo "ECR_REPOSITORY0=xpovx-dev-nginx" >> $GITHUB_ENV
+  #         echo "CONTAINER_NAME1=xpovx-container-dev-falsk-app" >> $GITHUB_ENV
+  #         echo "CONTAINER_NAME0=xpovx-container-dev-nginx" >> $GITHUB_ENV
 
-      - name: Set up stg environment
-        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/stg') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'stg' && github.event.action != 'closed') }}
-        run: |
-          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECS_SERVICE=xpov-service-stg" >> $GITHUB_ENV
-          echo "ECS_CLUSTER=xpov-cluster-stg" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY1=xpov-stg-falsk-app" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpov-stg-nginx" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpov-container-stg-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME0=xpov-container-stg-nginx" >> $GITHUB_ENV
-
-
-      - name: Set up Prod environment
-        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
-        run: |
-          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
-          echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
-          echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY1=xpovv-prod-falsk-app" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY0=xpovv-prod-nginx" >> $GITHUB_ENV
-          echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
-          echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-          mask-aws-account-id: 'no'
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG .
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY0:latest ./nginx
-          # echo "::set-output name=image0::$ECR_REGISTRY/$ECR_REPOSITORY0:latest"
-
-      # - name: Run Trivy vulnerability scanner
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #     image-ref: ${{ steps.build-image.outputs.image }}
-      #     format: 'table'
-      #     exit-code: '1'
-      #     ignore-unfixed: true
-      #     vuln-type: 'os,library'
-      #     severity: 'CRITICAL'
-      #     timeout: 20m0s
-
-      - name: Push image to Amazon ECR
-        id: push-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY0:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG
+  #     - name: Set up stg environment
+  #       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/stg') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'stg' && github.event.action != 'closed') }}
+  #       run: |
+  #         echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+  #         echo "ECS_SERVICE=xpov-service-stg" >> $GITHUB_ENV
+  #         echo "ECS_CLUSTER=xpov-cluster-stg" >> $GITHUB_ENV
+  #         echo "ECR_REPOSITORY1=xpov-stg-falsk-app" >> $GITHUB_ENV
+  #         echo "ECR_REPOSITORY0=xpov-stg-nginx" >> $GITHUB_ENV
+  #         echo "CONTAINER_NAME1=xpov-container-stg-falsk-app" >> $GITHUB_ENV
+  #         echo "CONTAINER_NAME0=xpov-container-stg-nginx" >> $GITHUB_ENV
 
 
-      # - name: Microsoft Teams Notification
-      #   uses: skitionek/notify-microsoft-teams@master
-      #   if: always()
-      #   with:
-      #     webhook_url: ${{ secrets.TEAMS_WEBHOOK }}
-      #     needs: ${{ toJson(needs) }}
-      #     job: ${{ toJson(job) }}
-      #     steps: ${{ toJson(steps) }}
+  #     - name: Set up Prod environment
+  #       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.action != 'closed') }}
+  #       run: |
+  #         echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+  #         echo "ECS_SERVICE=xpovv-service-prod" >> $GITHUB_ENV
+  #         echo "ECS_CLUSTER=xpovv-cluster-prod" >> $GITHUB_ENV
+  #         echo "ECR_REPOSITORY1=xpovv-prod-falsk-app" >> $GITHUB_ENV
+  #         echo "ECR_REPOSITORY0=xpovv-prod-nginx" >> $GITHUB_ENV
+  #         echo "CONTAINER_NAME1=xpovv-container-prod-falsk-app" >> $GITHUB_ENV
+  #         echo "CONTAINER_NAME0=xpovv-container-prod-nginx" >> $GITHUB_ENV
+
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ env.AWS_REGION }}
+  #         mask-aws-account-id: 'no'
+
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+
+  #     - name: Build, tag, and push image to Amazon ECR
+  #       id: build-image
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         IMAGE_TAG: ${{ github.sha }}
+  #       run: |
+  #         # Build a docker container and
+  #         # push it to ECR so that it can
+  #         # be deployed to ECS.
+  #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG .
+  #         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG"
+  #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY0:latest ./nginx
+  #         # echo "::set-output name=image0::$ECR_REGISTRY/$ECR_REPOSITORY0:latest"
+
+  #     # - name: Run Trivy vulnerability scanner
+  #     #   uses: aquasecurity/trivy-action@master
+  #     #   with:
+  #     #     image-ref: ${{ steps.build-image.outputs.image }}
+  #     #     format: 'table'
+  #     #     exit-code: '1'
+  #     #     ignore-unfixed: true
+  #     #     vuln-type: 'os,library'
+  #     #     severity: 'CRITICAL'
+  #     #     timeout: 20m0s
+
+  #     - name: Push image to Amazon ECR
+  #       id: push-image
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         IMAGE_TAG: ${{ github.sha }}
+  #       run: |
+  #         docker push $ECR_REGISTRY/$ECR_REPOSITORY0:latest
+  #         docker push $ECR_REGISTRY/$ECR_REPOSITORY1:$IMAGE_TAG
+
+
+  #     # - name: Microsoft Teams Notification
+  #     #   uses: skitionek/notify-microsoft-teams@master
+  #     #   if: always()
+  #     #   with:
+  #     #     webhook_url: ${{ secrets.TEAMS_WEBHOOK }}
+  #     #     needs: ${{ toJson(needs) }}
+  #     #     job: ${{ toJson(job) }}
+  #     #     steps: ${{ toJson(steps) }}
 
   release-please:
     name: Release
@@ -281,7 +281,7 @@ jobs:
       id: Changelog
       uses: metcalfc/changelog-generator@v1.0.0
       with:
-        myToken: "${{ secrets.GITHUB_TOKEN }}"
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
 
     - name: Git Version
       id: version
