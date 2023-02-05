@@ -159,3 +159,8 @@ Project: sucounix/xpov/01-infra/infra
  ![Screenshot](scr/18-tags.png)
  ![Screenshot](scr/19-dev-api-p0c.png)
  ![Screenshot](scr/20-prod-api-poc.png)
+## URLs
+
+http://xpovii-alb-dev-1720793357.eu-central-1.elb.amazonaws.com/api/docs/
+
+http://xpovii-alb-prod-1384796328.eu-central-1.elb.amazonaws.com/api/docs/
