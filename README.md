@@ -2,7 +2,7 @@
 
 ## - Digram
 
- ![Screenshot](scr/Digram.png)
+ ![Screenshot](scr/digram.png)
 
 ## - Used AWS services 
 ```
