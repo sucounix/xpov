@@ -147,7 +147,7 @@ Project: sucounix/xpov/01-infra/infra
  ![Screenshot](scr/09-deploy-app-ci.png)
  ![Screenshot](scr/10-deply-app--to-prod-ci.png)
  ![Screenshot](scr/11-mearg-pr-app-to-prod.png)
- ![Screenshot](src/12-release-ci.png)
+ ![Screenshot](scr/12-release-ci.png)
 
 ## - APP-P0C
 
